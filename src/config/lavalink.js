@@ -1,10 +1,10 @@
-require('dotenv').config();
+require("dotenv").config();
 
 module.exports = [
-    {
-        name: 'Feather Node',
-        url: `${process.env.LAVALINK_HOST}:${process.env.LAVALINK_PORT}`,
-        auth: process.env.LAVALINK_PASSWORD,
-        secure: process.env.LAVALINK_SECURE === 'true'
-    }
+  {
+    name: process.env.LAVALINK_NAME || "Lavalink",
+    url: `${process.env.LAVALINK_HOST}:${process.env.LAVALINK_PORT}`,
+    auth: process.env.LAVALINK_PASSWORD,
+    secure: process.env.LAVALINK_SECURE === "true",
+  },
 ];
