@@ -1,4 +1,5 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const emojis = require('../utils/emojis');
 
 module.exports = {
     playerButtons: (paused = false) => {
@@ -6,23 +7,23 @@ module.exports = {
             .addComponents(
                 new ButtonBuilder()
                     .setCustomId('previous')
-                    .setEmoji('<:jk_backward:1500921320236646522>')
+                    .setEmoji(emojis.backward)
                     .setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder()
                     .setCustomId('play_pause')
-                    .setEmoji(paused ? '<:icons_play:1500920780312285386>' : '<:pause:1500921090187202761>')
+                    .setEmoji(paused ? emojis.play : emojis.pause)
                     .setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder()
                     .setCustomId('stop')
-                    .setEmoji('<:stop:1500921641826258958>')
+                    .setEmoji(emojis.stop)
                     .setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder()
                     .setCustomId('skip')
-                    .setEmoji('<:e_blackforward:1500921177613537362>')
+                    .setEmoji(emojis.forward)
                     .setStyle(ButtonStyle.Secondary),
                 new ButtonBuilder()
                     .setCustomId('loop')
-                    .setEmoji('<:black_update:1500921989248979115>')
+                    .setEmoji(emojis.loop)
                     .setStyle(ButtonStyle.Secondary)
             );
     }

@@ -1,5 +1,6 @@
 const User = require('../../database/models/user');
 const helpUI = require('../../ui/helpUI');
+const emojis = require('../../utils/emojis');
 const noPrefixCache = new Map();
 
 const event = {
@@ -104,7 +105,7 @@ const event = {
             const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
             const container = new ContainerBuilder()
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(`### <:wrong:1500917527918678147> Command Error\n> \`\`\`js\n> ${(error.message || 'Unknown Internal Error').split('\n')[0]}\n> \`\`\``)
+                    new TextDisplayBuilder().setContent(`### ${emojis.error} Command Error\n> \`\`\`js\n> ${(error.message || 'Unknown Internal Error').split('\n')[0]}\n> \`\`\``)
                 );
             message.reply({
                 content: null,

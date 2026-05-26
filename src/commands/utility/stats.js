@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, version, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags, ThumbnailBuilder } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'stats',
@@ -29,13 +30,13 @@ module.exports = {
                 .addSectionComponents(
                     new SectionBuilder()
                         .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(`## <:stats:1500932679275909224> Feather Information`),
+                            new TextDisplayBuilder().setContent(`## ${emojis.statsBot} Feather Information`),
                             new TextDisplayBuilder().setContent(
-                                `### <a:Black_Thunder:1500932956632383548> Performance\n` +
+                                `### ${emojis.thunder} Performance\n` +
                                 `> **Latency:** \`${latency}ms\`\n` +
                                 `> **API Latency:** \`${apiLatency}ms\`\n` +
                                 `> **Online Since:** ${uptimeText}\n\n` +
-                                `### <:stats:1500933201433067520> Statistics\n` +
+                                `### ${emojis.statsSec} Statistics\n` +
                                 `> **Guilds:** \`${guilds.toLocaleString()}\`\n` +
                                 `> **Users:** \`${users.toLocaleString()}\`\n` +
                                 `> **Memory:** \`${memory} MB\`\n` +

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags, SectionBuilder, ThumbnailBuilder } = require('discord.js');
 const User = require('../../database/models/user');
 const Guild = require('../../database/models/guild');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'premium',
@@ -29,7 +30,7 @@ module.exports = {
                 .addSectionComponents(
                     new SectionBuilder()
                         .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(isError ? `### <:wrong:1500917527918678147> ${title}` : `### ${title}`),
+                            new TextDisplayBuilder().setContent(isError ? `### ${emojis.error} ${title}` : `### ${title}`),
                             new TextDisplayBuilder().setContent(`ㅤ\n${content}`)
                         )
                         .setThumbnailAccessory(new ThumbnailBuilder().setURL(client.user.displayAvatarURL()))
@@ -45,7 +46,7 @@ module.exports = {
             const userPrem = (userData?.premium && (!userData.premiumUntil || userData.premiumUntil > Date.now())) || isOwner;
             const guildPrem = guildData?.premium && (!guildData.premiumUntil || guildData.premiumUntil > Date.now());
 
-            let statusText = `**<:feather:1500912679487799519> Feather Premium Status**\n\n`;
+            let statusText = `**${emojis.feather} Feather Premium Status**\n\n`;
             statusText += `› **User Premium:** ${userPrem ? 'Enabled ✨' : 'Disabled'}\n`;
             if (isOwner) statusText += `└ \`Lifetime Owner Perk\`\n`;
             else if (userData?.premiumUntil) statusText += `└ Expires <t:${Math.floor(userData.premiumUntil.getTime() / 1000)}:R>\n`;
@@ -79,7 +80,7 @@ module.exports = {
                     const targetUser = await client.users.fetch(targetId);
                     const dmContainer = new ContainerBuilder().addTextDisplayComponents(
                         new TextDisplayBuilder().setContent(
-                            `### <:wrong:1500917527918678147> Premium Revoked\n` +
+                            `### ${emojis.error} Premium Revoked\n` +
                             `Your **Feather Premium** subscription has been revoked by an administrator.\n\n` +
                             `**Impact:**\n` +
                             `└ No-Prefix access removed.\n` +
@@ -109,7 +110,7 @@ module.exports = {
                         const owner = await targetGuild.fetchOwner();
                         const dmContainer = new ContainerBuilder().addTextDisplayComponents(
                             new TextDisplayBuilder().setContent(
-                                `### <:wrong:1500917527918678147> Guild Premium Revoked\n` +
+                                `### ${emojis.error} Guild Premium Revoked\n` +
                                 `Premium status has been revoked from your server **${targetGuild.name}**.\n\n` +
                                 `**Impact:**\n` +
                                 `└ 24/7 mode disabled.\n` +
@@ -161,9 +162,9 @@ module.exports = {
             // Notification logic
             if (targetGuild) {
                 const dmContent =
-                    `### <:feather:1500912679487799519> Feather Guild Premium Activated!\n` +
+                    `### ${emojis.feather} Feather Guild Premium Activated!\n` +
                     `Your server **${targetGuild.name}** have been given **Feather Premium** for ${durationText}.\n\n` +
-                    `<a:blackdot:1500917796140351578> **Exclusive Server Perks:**\n` +
+                    `${emojis.blackdot} **Exclusive Server Perks:**\n` +
                     `› **24/7 Mode**\n` +
                     `└ Keep the bot in voice channels indefinitely.\n\n` +
                     `› **Unlimited Queue**\n` +
@@ -196,8 +197,8 @@ module.exports = {
             }
 
             const content =
-                `<:feather:1500912679487799519> **Feather Premium Activated**\n` +
-                `› <a:blackdot:1500917796140351578> **Status:** Activated ✨\n` +
+                `${emojis.feather} **Feather Premium Activated**\n` +
+                `› ${emojis.blackdot} **Status:** Activated ✨\n` +
                 `└ **Server:** ${guildName}\n` +
                 `└ **Duration:** ${durationText}\n` +
                 `└ **Expires:** ${expiryText}`;
@@ -241,9 +242,9 @@ module.exports = {
             try {
                 const dmContainer = new ContainerBuilder().addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        `### <:feather:1500912679487799519> Feather Premium Activated!\n` +
+                        `### ${emojis.feather} Feather Premium Activated!\n` +
                         `**You have been given Feather Premium** for ${durationText}. Enjoy your exclusive benefits:\n\n` +
-                        `<a:blackdot:1500917796140351578> **Exclusive Benefits:**\n` +
+                        `${emojis.blackdot} **Exclusive Benefits:**\n` +
                         `› **No-Prefix**\n` +
                         `└ Execute commands directly without the prefix.\n\n` +
                         `› **24/7 Mode**\n` +
@@ -264,8 +265,8 @@ module.exports = {
             }
 
             const content =
-                `**<:feather:1500912679487799519> Feather Premium Activated**\n` +
-                `› <a:blackdot:1500917796140351578> ** Status:** Activated ✨\n` +
+                `**${emojis.feather} Feather Premium Activated**\n` +
+                `› ${emojis.blackdot} ** Status:** Activated ✨\n` +
                 `└ ** User:** ${targetUser.username} \n` +
                 `└ ** Duration:** ${durationText} \n` +
                 `└ ** Expires:** ${expiryText} `;

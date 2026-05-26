@@ -14,6 +14,7 @@ const metadata = require('../../utils/metadata');
 const resolver = require('../../utils/resolver');
 const { formatTime } = require('../../utils/formatters');
 const logger = require('../../utils/logger');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'play',
@@ -35,7 +36,7 @@ module.exports = {
         const member = message.member;
 
         const createError = (text) => ({
-            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> ${text}`)).toJSON()],
+            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.error} ${text}`)).toJSON()],
             flags: MessageFlags.IsComponentsV2,
             ephemeral: true
         });
@@ -120,7 +121,7 @@ module.exports = {
             successContainer.addSectionComponents(
                 new SectionBuilder()
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`### <:check_black:1500924675511812208> Playlist Added`),
+                        new TextDisplayBuilder().setContent(`### ${emojis.check} Playlist Added`),
                         new TextDisplayBuilder().setContent(`> [**${result.playlistName}**](${query}) with \`${tracks.length}\` tracks\n> -# Queued by \` ${user.username} \``)
                     )
             );
@@ -129,7 +130,7 @@ module.exports = {
             const position = player.queue.length;
             const section = new SectionBuilder()
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(`### <:check_black:1500924675511812208> Track Added`),
+                    new TextDisplayBuilder().setContent(`### ${emojis.check} Track Added`),
                     new TextDisplayBuilder().setContent(
                         `> [**${metadata.truncate(track.title, 35)}**](${track.uri}) by \` ${metadata.cleanAuthor(track.author)} \`\n` +
                         `> -# Position \` #${position} \` · Duration \` ${formatTime(track.length)} \` · By \` ${user.username} \``

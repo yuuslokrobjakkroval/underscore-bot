@@ -6,6 +6,7 @@ const {
     PermissionFlagsBits
 } = require('discord.js');
 const logger = require('../../utils/logger');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'playlofi',
@@ -22,7 +23,7 @@ module.exports = {
         const member = message.member;
 
         const createError = (text) => ({
-            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> ${text}`)).toJSON()],
+            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.error} ${text}`)).toJSON()],
             flags: MessageFlags.IsComponentsV2,
             ephemeral: true
         });

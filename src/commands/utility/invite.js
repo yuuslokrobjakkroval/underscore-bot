@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'invite',
@@ -10,7 +11,7 @@ module.exports = {
         const invite = `https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot%20applications.commands`;
         
         const container = new ContainerBuilder().addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(`### <:feather:1500912679487799519> Invite Feather\n> Add me to your server to enjoy high-quality music!`)
+            new TextDisplayBuilder().setContent(`### ${emojis.feather} Invite Feather\n> Add me to your server to enjoy high-quality music!`)
         ).addActionRowComponents(
             new ActionRowBuilder().addComponents(
                 new ButtonBuilder()

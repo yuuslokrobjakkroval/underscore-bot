@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'recommend',
@@ -12,7 +13,7 @@ module.exports = {
         const user = isInteraction ? message.user : message.author;
         const player = client.manager.players.get(guildId);
         const createErr = (text) => ({ 
-            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> ${text}`)).toJSON()], 
+            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.error} ${text}`)).toJSON()],
             flags: MessageFlags.IsComponentsV2 
         });
 

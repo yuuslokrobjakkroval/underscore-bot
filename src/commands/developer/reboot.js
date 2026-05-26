@@ -1,4 +1,5 @@
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'reboot',
@@ -7,13 +8,13 @@ module.exports = {
     async execute(client, message, args) {
         if (!client.config.owners.includes(message.author.id)) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> This command is restricted to bot developers.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} This command is restricted to bot developers.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
 
         const container = new ContainerBuilder().addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(`> <a:black_update:1500921989248979115> Rebooting bot... Process will exit and be restarted by PM2/System.`)
+            new TextDisplayBuilder().setContent(`> ${emojis.rebooting} Rebooting bot... Process will exit and be restarted by PM2/System.`)
         );
 
         await message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });

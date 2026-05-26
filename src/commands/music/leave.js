@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'leave',
@@ -13,12 +14,12 @@ module.exports = {
         const player = client.manager.players.get(guildId);
         const createResponse = (text, isError = false) => {
             const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`${isError ? '> <:wrong:1500917527918678147> > ' : '> <:check_black:1500924675511812208> '}${text}`)
+                new TextDisplayBuilder().setContent(`${isError ? `> ${emojis.error} > ` : `> ${emojis.check} `}${text}`)
             );
             return { components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
         };
 
-        if (!player) return message.reply(createResponse('<:blacklist:1500921270378959000> I am not in a voice channel.', true));
+        if (!player) return message.reply(createResponse(`${emojis.blacklist} I am not in a voice channel.`, true));
 
         player.data.manualDisconnect = true;
         player.destroy();

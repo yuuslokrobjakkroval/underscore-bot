@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'clear',
@@ -13,15 +14,15 @@ module.exports = {
         const player = client.manager.players.get(guildId);
         const createResponse = (text, isError = false) => {
             const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`${isError ? '> <:wrong:1500917527918678147> ' : '> <:Delete:1500925771437314099> Cleared '}${text}`)
+                new TextDisplayBuilder().setContent(`${isError ? `> ${emojis.error} ` : `> ${emojis.delete} Cleared `}${text}`)
             );
             return { components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
         };
 
-        if (!player) return message.reply(createResponse('<:blacklist:1500921270378959000> There is no music playing.', true));
-        if (!player.queue.length) return message.reply(createResponse('<:wrong:1500917527918678147> The queue is already empty.', true));
+        if (!player) return message.reply(createResponse(`${emojis.blacklist} There is no music playing.`, true));
+        if (!player.queue.length) return message.reply(createResponse(`${emojis.error} The queue is already empty.`, true));
 
         player.queue.clear();
-        message.reply(createResponse('<:check_black:1500924675511812208> Cleared the music queue.'));
+        message.reply(createResponse(`${emojis.check} Cleared the music queue.`));
     }
 };

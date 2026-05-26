@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'voteskip',
@@ -12,7 +13,7 @@ module.exports = {
         const user = isInteraction ? message.user : message.author;
         const player = client.manager.players.get(guildId);
         const createErr = (text) => ({
-            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> ${text}`)).toJSON()],
+            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.error} ${text}`)).toJSON()],
             flags: MessageFlags.IsComponentsV2
         });
 
@@ -33,10 +34,10 @@ module.exports = {
         if (votes.length >= required) {
             player.skip();
             player.data.votes = [];
-            const container = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:check_black:1500924675511812208> Skip vote passed! Skipping song...`));
+            const container = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.check} Skip vote passed! Skipping song...`));
             return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });
         } else {
-            const container = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <a:Black_Thunder:1500932956632383548> Vote added: \`${votes.length}/${required}\``));
+            const container = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.thunder} Vote added: \`${votes.length}/${required}\``));
             return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
     }

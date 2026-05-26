@@ -1,4 +1,5 @@
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'voiceStateUpdate',
@@ -32,7 +33,7 @@ module.exports = {
                         textChannel.send({
                             content: null,
                             components: [new ContainerBuilder().addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`> <a:black_vinyl:1500920467379191990> **24/7 Mode:** Rejoined vc automatically.`)
+                                new TextDisplayBuilder().setContent(`> ${emojis.vinyl} **24/7 Mode:** Rejoined vc automatically.`)
                             ).toJSON()],
                             flags: MessageFlags.IsComponentsV2
                         }).catch(() => { });
@@ -61,7 +62,7 @@ module.exports = {
                         textChannel.send({
                             content: null,
                             components: [new ContainerBuilder().addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`> <:pause:1500921090187202761> **Alone in VC:** Music paused.`)
+                                new TextDisplayBuilder().setContent(`> ${emojis.pause} **Alone in VC:** Music paused.`)
                             ).toJSON()],
                             flags: MessageFlags.IsComponentsV2
                         }).catch(() => { });
@@ -79,7 +80,7 @@ module.exports = {
                                     textChannel.send({
                                         content: null,
                                         components: [new ContainerBuilder().addTextDisplayComponents(
-                                            new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> **Auto-Leave:** Left voice channel as no one joined again.`)
+                                            new TextDisplayBuilder().setContent(`> ${emojis.error} **Auto-Leave:** Left voice channel as no one joined again.`)
                                         ).toJSON()],
                                         flags: MessageFlags.IsComponentsV2
                                     }).catch(() => { });
@@ -98,7 +99,7 @@ module.exports = {
                         textChannel.send({
                             content: null,
                             components: [new ContainerBuilder().addTextDisplayComponents(
-                                new TextDisplayBuilder().setContent(`> <:icons_play:1500920780312285386> **Welcome Back:** Resuming music.`)
+                                new TextDisplayBuilder().setContent(`> ${emojis.play} **Welcome Back:** Resuming music.`)
                             ).toJSON()],
                             flags: MessageFlags.IsComponentsV2
                         }).catch(() => { });

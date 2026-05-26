@@ -14,6 +14,7 @@ const {
 } = require('discord.js');
 const { formatTime } = require('../../utils/formatters');
 const metadata = require('../../utils/metadata');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'nowplaying',
@@ -30,7 +31,7 @@ module.exports = {
             const player = client.manager.players.get(guildId);
             if (!player || !player.queue.current) {
                 const container = new ContainerBuilder().addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent('> <:wrong:1500917527918678147> There is no music playing.')
+                    new TextDisplayBuilder().setContent(`> ${emojis.error} There is no music playing.`)
                 );
                 const res = { components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
                 return isInteraction ? message.reply(res) : message.reply(res);
@@ -53,7 +54,7 @@ module.exports = {
                     )
                 )
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(`### <a:black_vinyl:1500920467379191990> [${title}](${track.uri})`),
+                    new TextDisplayBuilder().setContent(`### ${emojis.vinyl} [${title}](${track.uri})`),
                     new TextDisplayBuilder().setContent(
                         `> \` ${author} \` · \` ${formatTime(currentPos)} / ${formatTime(total)} \``
                     )
@@ -61,11 +62,11 @@ module.exports = {
                 .addSeparatorComponents(new SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small))
                 .addActionRowComponents(
                     new ActionRowBuilder().addComponents(
-                        new ButtonBuilder().setCustomId('previous').setEmoji('<:jk_backward:1500921320236646522>').setStyle(ButtonStyle.Secondary),
-                        new ButtonBuilder().setCustomId('play_pause').setEmoji(paused ? '<:icons_play:1500920780312285386>' : '<:pause:1500921090187202761>').setStyle(ButtonStyle.Secondary),
-                        new ButtonBuilder().setCustomId('stop').setEmoji('<:stop:1500921641826258958>').setStyle(ButtonStyle.Secondary),
-                        new ButtonBuilder().setCustomId('skip').setEmoji('<:e_blackforward:1500921177613537362>').setStyle(ButtonStyle.Secondary),
-                        new ButtonBuilder().setCustomId('loop').setEmoji('<:black_update:1500921989248979115>').setStyle(ButtonStyle.Secondary)
+                        new ButtonBuilder().setCustomId('previous').setEmoji(emojis.backward).setStyle(ButtonStyle.Secondary),
+                        new ButtonBuilder().setCustomId('play_pause').setEmoji(paused ? emojis.play : emojis.pause).setStyle(ButtonStyle.Secondary),
+                        new ButtonBuilder().setCustomId('stop').setEmoji(emojis.stop).setStyle(ButtonStyle.Secondary),
+                        new ButtonBuilder().setCustomId('skip').setEmoji(emojis.forward).setStyle(ButtonStyle.Secondary),
+                        new ButtonBuilder().setCustomId('loop').setEmoji(emojis.loop).setStyle(ButtonStyle.Secondary)
                     )
                 );
 

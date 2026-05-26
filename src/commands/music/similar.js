@@ -14,6 +14,7 @@ const { formatTime } = require('../../utils/formatters');
 const metadata = require('../../utils/metadata');
 const resolver = require('../../utils/resolver');
 const logger = require('../../utils/logger');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'similar',
@@ -30,7 +31,7 @@ module.exports = {
 
         const player = client.manager.players.get(member.guild.id);
         if (!player || !player.queue.current) {
-            const err = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:wrong:1500917527918678147> **Play a song first to see similar tracks.**`));
+            const err = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.error} **Play a song first to see similar tracks.**`));
             const res = { components: [err.toJSON()], flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral };
             return isInteraction ? message.reply(res) : message.reply(res);
         }
@@ -45,7 +46,7 @@ module.exports = {
             result = await client.manager.search(query, { requester: user });
         } catch (e) {
             logger.error(`Similar command failed: ${e.message || JSON.stringify(e)}`);
-            const err = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:wrong:1500917527918678147> **Search Failed:** The music server is currently unavailable.`));
+            const err = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.error} **Search Failed:** The music server is currently unavailable.`));
             return isInteraction ? message.editReply({ components: [err.toJSON()], flags: MessageFlags.IsComponentsV2 }) : message.reply({ components: [err.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
 
@@ -55,7 +56,7 @@ module.exports = {
         const totalPages = Math.ceil(tracks.length / multiple);
 
         if (tracks.length === 0) {
-            const noRes = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:wrong:1500917527918678147> **Could not find any similar tracks.**`));
+            const noRes = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.error} **Could not find any similar tracks.**`));
             return isInteraction ? message.editReply({ components: [noRes.toJSON()], flags: MessageFlags.IsComponentsV2 }) : message.reply({ components: [noRes.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
 
@@ -64,7 +65,7 @@ module.exports = {
             const start = p * multiple;
             const currentBatch = tracks.slice(start, start + multiple);
 
-            container.addTextDisplayComponents(new TextDisplayBuilder().setContent(`### <:music:1500923048646152284> Similar Tracks\n-# Based on: \`${metadata.truncate(currentTrack.title, 30)}\``));
+            container.addTextDisplayComponents(new TextDisplayBuilder().setContent(`### ${emojis.music} Similar Tracks\n-# Based on: \`${metadata.truncate(currentTrack.title, 30)}\``));
             container.addSeparatorComponents(new SeparatorBuilder());
 
             currentBatch.forEach((track, i) => {
@@ -136,7 +137,7 @@ module.exports = {
                     
                     const success = new ContainerBuilder().addSectionComponents(
                         new SectionBuilder()
-                            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:check_black:1500924675511812208> Added [${track.title}](${track.uri}) to queue.`))
+                            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.check} Added [${track.title}](${track.uri}) to queue.`))
                             .setThumbnailAccessory(new ThumbnailBuilder().setURL(metadata.getMediumThumbnail(track.thumbnail)))
                     );
                     
@@ -166,7 +167,7 @@ module.exports = {
                 tracks.forEach(t => player.queue.add(t));
                 
                 const success = new ContainerBuilder().addSectionComponents(
-                    new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:check_black:1500924675511812208> Added all **${tracks.length}** similar tracks to queue.`))
+                    new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.check} Added all **${tracks.length}** similar tracks to queue.`))
                 );
                 
                 await i.reply({ components: [success.toJSON()], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });

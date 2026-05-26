@@ -1,4 +1,5 @@
 const { ContainerBuilder, TextDisplayBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags, SectionBuilder, ThumbnailBuilder, SeparatorBuilder, SeparatorSpacingSize, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
+const emojis = require('../utils/emojis');
 
 module.exports = {
     mentionHelp: async (client) => {
@@ -10,9 +11,9 @@ module.exports = {
                         new TextDisplayBuilder().setContent(`## Hey! I'm **Feather**`),
                         new TextDisplayBuilder().setContent(
                             `> - **Your personal high-fidelity music system**\n\n` +
-                            `> **<:music:1500923048646152284> Quick Start**\n` +
+                            `> **${emojis.music} Quick Start**\n` +
                             `└ Type \`/play\` or \`${p}play\` to start music\n\n` +
-                            `> **<:icons_navigation:1500937486107410542> Navigation**\n` +
+                            `> **${emojis.navigation} Navigation**\n` +
                             `└ Use the Help button to explore all **40+ commands**`
                         )
                     )
@@ -45,16 +46,16 @@ module.exports = {
             .addSectionComponents(
                 new SectionBuilder()
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`## <:feather:1500912679487799519> Feather Help Menu`),
+                        new TextDisplayBuilder().setContent(`## ${emojis.feather} Feather Help Menu`),
                         new TextDisplayBuilder().setContent(
                             `ㅤ\n` +
-                            `› **<:music:1500923048646152284> Music**\n` +
+                            `› **${emojis.music} Music**\n` +
                             `└ *Core playback and audio effects*\n\n` +
-                            `› **<a:r_heart_black_1:1500923805244063786> Social & Discovery**\n` +
+                            `› **${emojis.heart} Social & Discovery**\n` +
                             `└ *Playlists, Favorites & smart discovery*\n\n` +
-                            `› **<:admin:1500924079857864724> Admin**\n` +
+                            `› **${emojis.admin} Admin**\n` +
                             `└ *DJ system & developer tools*\n\n` +
-                            `› **<:black_config:1500924211437371602> Utility**\n` +
+                            `› **${emojis.config} Utility**\n` +
                             `└ *Bot stats & system information*\n\n` +
                             `*Select a category from the dropdown below.*`
                         )
@@ -71,22 +72,22 @@ module.exports = {
                             new StringSelectMenuOptionBuilder()
                                 .setLabel('Music')
                                 .setDescription('Core playback and audio effects')
-                                .setEmoji('<:music:1500923048646152284>')
+                                .setEmoji(emojis.music)
                                 .setValue('help_music'),
                             new StringSelectMenuOptionBuilder()
                                 .setLabel('Social & Discovery')
                                 .setDescription('Playlists, Favorites and discovery')
-                                .setEmoji('<a:r_heart_black_1:1500923805244063786>')
+                                .setEmoji(emojis.heart)
                                 .setValue('help_social'),
                             new StringSelectMenuOptionBuilder()
                                 .setLabel('Admin')
                                 .setDescription('DJ system and developer tools')
-                                .setEmoji('<:admin:1500924079857864724>')
+                                .setEmoji(emojis.admin)
                                 .setValue('help_admin'),
                             new StringSelectMenuOptionBuilder()
                                 .setLabel('Utility')
                                 .setDescription('Bot stats and system info')
-                                .setEmoji('<:black_config:1500924211437371602>')
+                                .setEmoji(emojis.config)
                                 .setValue('help_utility')
                         )
                 )
@@ -106,7 +107,7 @@ module.exports = {
             .addSectionComponents(
                 new SectionBuilder()
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`### <:music:1500923048646152284> Music Commands`),
+                        new TextDisplayBuilder().setContent(`### ${emojis.music} Music Commands`),
                         new TextDisplayBuilder().setContent(
                             `ㅤ\n` +
                             `› **Core Playback**\n` +
@@ -149,7 +150,7 @@ module.exports = {
             .addSectionComponents(
                 new SectionBuilder()
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`### <a:r_heart_black_1:1500923805244063786> Social & Discovery`),
+                        new TextDisplayBuilder().setContent(`### ${emojis.heart} Social & Discovery`),
                         new TextDisplayBuilder().setContent(
                             `ㅤ\n` +
                             `› **Profile & Interaction**\n` +
@@ -193,7 +194,7 @@ module.exports = {
             .addSectionComponents(
                 new SectionBuilder()
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`### <:admin:1500924079857864724> Admin & Developer`),
+                        new TextDisplayBuilder().setContent(`### ${emojis.admin} Admin & Developer`),
                         new TextDisplayBuilder().setContent(
                             `ㅤ\n` +
                             `› **DJ System (Moderators)**\n` +
@@ -232,7 +233,7 @@ module.exports = {
             .addSectionComponents(
                 new SectionBuilder()
                     .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`### <:black_config:1500924211437371602> Utility Commands`),
+                        new TextDisplayBuilder().setContent(`### ${emojis.config} Utility Commands`),
                         new TextDisplayBuilder().setContent(
                             `ㅤ\n` +
                             `› **System Information**\n` +

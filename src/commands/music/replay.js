@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 const createMsg = (text) => ({
     content: null,
@@ -17,12 +18,12 @@ module.exports = {
         const isInteraction = !!message.options;
         const guildId = isInteraction ? message.guildId : message.guild.id;
         const player = client.manager.players.get(guildId);
-        if (!player || !player.queue.current) return message.reply(createMsg('> <:wrong:1500917527918678147> There is no music playing.'));
+        if (!player || !player.queue.current) return message.reply(createMsg(`> ${emojis.error} There is no music playing.`));
 
         const vc = message.member.voice.channel;
-        if (!vc || vc.id !== player.voiceId) return message.reply(createMsg('> <:wrong:1500917527918678147> You need to be in the same voice channel as the bot.'));
+        if (!vc || vc.id !== player.voiceId) return message.reply(createMsg(`> ${emojis.error} You need to be in the same voice channel as the bot.`));
 
         player.seek(0);
-        message.reply(createMsg('> <:check_black:1500924675511812208> Restarted the current track.'));
+        message.reply(createMsg(`> ${emojis.check} Restarted the current track.`));
     }
 };

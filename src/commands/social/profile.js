@@ -13,6 +13,7 @@ const {
 const User = require('../../database/models/user');
 const Playlist = require('../../database/models/playlist');
 const logger = require('../../utils/logger');
+const emojis = require('../../utils/emojis');
 
 // Paste your custom medium-resolution profile banner URL here!
 const PROFILE_BANNER_URL = 'https://cdn.discordapp.com/attachments/1500760681488584716/1505917569583026196/feather.png?ex=6a0c5e87&is=6a0b0d07&hm=44aba3dcca17b60124c55e829acad26195da651f8e45a40a358a31169171ef66&';
@@ -53,10 +54,10 @@ module.exports = {
             // 3. Determine Tier Status
             const isOwner = client.config.owners.includes(targetUser.id);
             const isPremium = client.db.isPremium(null, targetUser.id) || isOwner;
-            let tierText = '<:admin:1500924079857864724> **Standard Listener**';
+            let tierText = `${emojis.admin} **Standard Listener**`;
 
             if (isOwner) {
-                tierText = '<:stats:1500932574539944039> **Feather Developer**';
+                tierText = `${emojis.statsDev} **Feather Developer**`;
             } else if (isPremium) {
                 if (userData.premiumUntil) {
                     const dateStr = new Date(userData.premiumUntil).toLocaleDateString('en-US', {
@@ -93,10 +94,10 @@ module.exports = {
             const historyCount = userData.history?.length || 0;
 
             // 6. Calculate Listener Level Rank
-            let rankText = '<:Bronze:1505922764551360632> **Bronze Ear**';
-            if (historyCount > 100) rankText = '<:diamond_rank:1505922821304352819> **Diamond Maestro**';
-            else if (historyCount > 50) rankText = '<:GoldRank:1505922805567455363> **Gold Audiophile**';
-            else if (historyCount > 15) rankText = '<:silver:1505922786785230878> **Silver Groover**';
+            let rankText = `${emojis.rankBronze} **Bronze Ear**`;
+            if (historyCount > 100) rankText = `${emojis.rankDiamond} **Diamond Maestro**`;
+            else if (historyCount > 50) rankText = `${emojis.rankGold} **Gold Audiophile**`;
+            else if (historyCount > 15) rankText = `${emojis.rankSilver} **Silver Groover**`;
 
             // 7. Dynamic VC Now Playing Activity Status
             let liveActivityText = '';
@@ -105,7 +106,7 @@ module.exports = {
                 const guildObj = isInteraction ? message.guild : message.guild;
                 const member = guildObj.members.cache.get(targetUser.id);
                 if (member && member.voice.channelId === player.voiceId) {
-                    liveActivityText = `\n\n› **Live Activity**\n└ <a:vibe:1505923405420167178> Currently listening to **${player.queue.current.title.substring(0, 45)}**`;
+                    liveActivityText = `\n\n› **Live Activity**\n└ ${emojis.vibe} Currently listening to **${player.queue.current.title.substring(0, 45)}**`;
                 }
             }
 
@@ -125,19 +126,19 @@ module.exports = {
             // 9. Build High-Fidelity UI
             const section = new SectionBuilder()
                 .addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(`## <:feather:1500912679487799519> <@${targetUser.id}>'s Profile`),
+                    new TextDisplayBuilder().setContent(`## ${emojis.feather} <@${targetUser.id}>'s Profile`),
                     new TextDisplayBuilder().setContent(
                         `› **Account Tier**\n` +
                         `└ ${tierText}\n\n` +
                         `› **Listener Level**\n` +
                         `└ ${rankText}\n\n` +
                         `› **Library Statistics**\n` +
-                        `├ <:file:1505918548977909851> **Playlists:** \` ${playlistCount} \` custom lists\n` +
-                        `├ <:ag_black_heart:1505919003774816417> **Favorites:** \` ${likedCount} \` saved songs\n` +
-                        `└ <a:hs_blackhp:1505919340158128288> **History Size:** \` ${historyCount} \` tracks played\n\n` +
+                        `├ ${emojis.file} **Playlists:** \` ${playlistCount} \` custom lists\n` +
+                        `├ ${emojis.agHeart} **Favorites:** \` ${likedCount} \` saved songs\n` +
+                        `└ ${emojis.hpBar} **History Size:** \` ${historyCount} \` tracks played\n\n` +
                         `› **Personal Music Charts**\n` +
-                        `├ <a:music:1505920391519010977> **Top Artist:** ${topArtistText}\n` +
-                        `└ <a:hizumi_playing:1500920010300719124> **Favorite Song:** ${topSongText}\n\n` +
+                        `├ ${emojis.musicAnim} **Top Artist:** ${topArtistText}\n` +
+                        `└ ${emojis.nowPlaying} **Favorite Song:** ${topSongText}\n\n` +
                         `› **Recent Listening History**\n` +
                         historyText +
                         liveActivityText
@@ -168,7 +169,7 @@ module.exports = {
         } catch (err) {
             logger.error(`Profile Command Error: ${err.stack}`);
             const errRes = {
-                components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> An error occurred while retrieving the profile.`)).toJSON()],
+                components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.error} An error occurred while retrieving the profile.`)).toJSON()],
                 flags: MessageFlags.IsComponentsV2,
                 ephemeral: true
             };

@@ -13,6 +13,7 @@ const Guild = require('../../database/models/guild');
 const metadata = require('../../utils/metadata');
 const { formatTime } = require('../../utils/formatters');
 const logger = require('../../utils/logger');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'playlist',
@@ -46,14 +47,14 @@ module.exports = {
         const isPremium = client.db.isPremium(guildId, user.id) || client.config.owners.includes(user.id);
 
         const createError = (text) => ({
-            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> ${text}`)).toJSON()],
+            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.error} ${text}`)).toJSON()],
             flags: MessageFlags.IsComponentsV2,
             ephemeral: true
         });
 
         const createSuccess = (title, text) => {
             const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`### <:check_black:1500924675511812208> ${title}`),
+                new TextDisplayBuilder().setContent(`### ${emojis.check} ${title}`),
                 new TextDisplayBuilder().setContent(`> ${text}`)
             );
             return { components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
@@ -246,7 +247,7 @@ module.exports = {
 
                 if (!playlists || playlists.length === 0) {
                     const emptyContainer = new ContainerBuilder().addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`### <:wrong:1500917527918678147> No Playlists\n> You haven't created any custom playlists yet.\n> Use \`/playlist create <name>\` to make one!`)
+                        new TextDisplayBuilder().setContent(`### ${emojis.error} No Playlists\n> You haven't created any custom playlists yet.\n> Use \`/playlist create <name>\` to make one!`)
                     );
                     return message.reply({ components: [emptyContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
                 }

@@ -1,6 +1,7 @@
 const playerUI = require('../../ui/playerUI');
 const metadata = require('../../utils/metadata');
 const resolver = require('../../utils/resolver');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'playerStart', // Kazagumo event name
@@ -15,7 +16,7 @@ module.exports = {
         // Set VC Status
         const voiceChannel = client.channels.cache.get(player.voiceId);
         if (voiceChannel && typeof voiceChannel.setStatus === 'function') {
-            voiceChannel.setStatus(`<:feather:1500912679487799519> Playing: ${track.title}`).catch(() => { });
+            voiceChannel.setStatus(`${emojis.feather} Playing: ${track.title}`).catch(() => { });
         }
 
         // Store for autoplay reference

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'remove',
@@ -17,7 +18,7 @@ module.exports = {
         const player = client.manager.players.get(guildId);
         const createResponse = (text, isError = false) => {
             const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`${isError ? '> <:wrong:1500917527918678147> ' : '> <:Delete:1500925771437314099> '}${text}`)
+                new TextDisplayBuilder().setContent(`${isError ? `> ${emojis.error} ` : `> ${emojis.delete} `}${text}`)
             );
             return { components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
         };

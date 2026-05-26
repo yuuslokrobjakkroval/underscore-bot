@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags, SectionBuilder, ThumbnailBuilder, SeparatorBuilder } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'devs',
@@ -21,7 +22,7 @@ module.exports = {
             const container = new ContainerBuilder();
 
             container.addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`### <:admin:1500924079857864724> Development Team\n> This bot is maintained by a dedicated team of developers.`)
+                new TextDisplayBuilder().setContent(`### ${emojis.admin} Development Team\n> This bot is maintained by a dedicated team of developers.`)
             );
 
             container.addSeparatorComponents(new SeparatorBuilder().setDivider(true));

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'support',
@@ -10,7 +11,7 @@ module.exports = {
         const support = `https://discord.gg/89zjNQHehR`;
         
         const container = new ContainerBuilder().addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(`### <:icons_navigation:1500937486107410542> Support Server\n> Need help or have suggestions? Join our community!`)
+            new TextDisplayBuilder().setContent(`### ${emojis.navigation} Support Server\n> Need help or have suggestions? Join our community!`)
         ).addActionRowComponents(
             new ActionRowBuilder().addComponents(
                 new ButtonBuilder()

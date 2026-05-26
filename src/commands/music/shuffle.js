@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'shuffle',
@@ -18,25 +19,25 @@ module.exports = {
             const createResponse = (text, isError = false) => {
                 const container = new ContainerBuilder().addSectionComponents(
                     new SectionBuilder().addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`${isError ? '> <:wrong:1500917527918678147> ' : '> <:shuffle:1500931193300844795> '}${text}`)
+                        new TextDisplayBuilder().setContent(`${isError ? `> ${emojis.error} ` : `> ${emojis.shuffle} `}${text}`)
                     )
                 );
                 return { components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
             };
 
             if (!player) {
-                const res = createResponse('<:blacklist:1500921270378959000> There is no music playing.', true);
+                const res = createResponse('${emojis.blacklist} There is no music playing.', true);
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
             const vc = member.voice.channel;
             if (!vc || vc.id !== player.voiceId) {
-                const res = createResponse('<:blacklist:1500921270378959000> You need to be in the same voice channel as the bot.', true);
+                const res = createResponse('${emojis.blacklist} You need to be in the same voice channel as the bot.', true);
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
             if (!player.queue.length) {
-                const res = createResponse('<:blacklist:1500921270378959000> The queue is empty.', true);
+                const res = createResponse('${emojis.blacklist} The queue is empty.', true);
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 

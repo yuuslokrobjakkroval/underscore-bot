@@ -1,10 +1,11 @@
 const logger = require('../../utils/logger');
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 const createErrorMsg = (text) => ({
     content: null,
     embeds: [],
-    components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> ${text}`)).toJSON()],
+    components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.error} ${text}`)).toJSON()],
     flags: MessageFlags.IsComponentsV2,
     ephemeral: true
 });
@@ -118,7 +119,7 @@ module.exports = {
             const createSuccessMsg = (text) => ({
                 content: null,
                 embeds: [],
-                components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:check_black:1500924675511812208> ${text}`)).toJSON()],
+                components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.check} ${text}`)).toJSON()],
                 flags: MessageFlags.IsComponentsV2
             });
 
@@ -209,7 +210,7 @@ module.exports = {
                     const message = player.data.message;
                     if (message && message.editable) {
                         await message.edit(updatedUI).catch(err => {
-                            logger.error(`### <:wrong:1500917527918678147> Failed to edit player message: ${err.message}`);
+                            logger.error(`### ${emojis.error} Failed to edit player message: ${err.message}`);
                         });
                     }
                 }

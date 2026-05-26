@@ -1,6 +1,7 @@
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags, SectionBuilder, ThumbnailBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { formatTime } = require('../utils/formatters');
 const metadata = require('../utils/metadata');
+const emojis = require('../utils/emojis');
 
 module.exports = {
     createAddedEmbed: (track, position, user) => {
@@ -12,7 +13,7 @@ module.exports = {
 
         const section = new SectionBuilder()
             .addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`### <:check_black:1500924675511812208> Track Added`),
+                new TextDisplayBuilder().setContent(`### ${emojis.check} Track Added`),
                 new TextDisplayBuilder().setContent(
                     `> [**${title}**](${uri}) by \` ${author} \`\n` +
                     `> -# Position \` #${position} \` · Duration \` ${duration} \` · By [${user.displayName || user.username}](https://discord.com/users/${user.id})`

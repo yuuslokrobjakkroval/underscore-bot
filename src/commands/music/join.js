@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'join',
@@ -13,7 +14,7 @@ module.exports = {
 
         const createResponse = (text, isError = false) => {
             const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`${isError ? '> <:wrong:1500917527918678147> ' : '> <:check_black:1500924675511812208> '}${text}`)
+                new TextDisplayBuilder().setContent(`${isError ? `> ${emojis.error} ` : `> ${emojis.check} `}${text}`)
             );
             return { content: null, embeds: [], components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
         };

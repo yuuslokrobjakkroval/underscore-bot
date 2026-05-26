@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const User = require('../../database/models/user');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'noprefix',
@@ -21,7 +22,7 @@ module.exports = {
         const owners = client.config.owners;
 
         const createMsg = (text, isError = false) => ({
-            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${isError ? '> <:wrong:1500917527918678147> ' : '> '}${text}`)).toJSON()],
+            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${isError ? `> ${emojis.error} ` : '> '}${text}`)).toJSON()],
             flags: MessageFlags.IsComponentsV2
         });
 
@@ -36,7 +37,7 @@ module.exports = {
             const hasNP = userData?.noPrefix || false;
             const expiry = userData?.noPrefixUntil ? ` (Expires: <t:${Math.floor(userData.noPrefixUntil.getTime() / 1000)}:R>)` : '';
             return createMsg(
-                `**<:feather:1500912679487799519> No-Prefix Status**\n` +
+                `**${emojis.feather} No-Prefix Status**\n` +
                 `› **User:** ${user.username}\n` +
                 `└ **Status:** ${hasNP ? 'Enabled ✨' : 'Disabled'}${hasNP ? `\n└ **Expires:** ${expiry || 'Never'}` : ''}`
             );
@@ -81,9 +82,9 @@ module.exports = {
             try {
                 const dmContainer = new ContainerBuilder().addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        `### <:feather:1500912679487799519> No-Prefix Granted!\n` +
+                        `### ${emojis.feather} No-Prefix Granted!\n` +
                         `Your No-Prefix has been activated ${expiryText}.\n\n` +
-                        `› **<:search:1500924349878632509> How to use:**\n` +
+                        `› **${emojis.search} How to use:**\n` +
                         `└ Just type the command directly (e.g., \`play\`, \`skip\`).\n` +
                         `└ No need to use the prefix \`${client.config.prefix}\` anymore!\n` +
                         `└ Works in all servers where the bot is present.`
@@ -94,7 +95,7 @@ module.exports = {
             } catch (err) { }
 
             return createMsg(
-                `*<:feather:1500912679487799519> *No-Prefix Granted**\n` +
+                `*${emojis.feather} *No-Prefix Granted**\n` +
                 `ㅤ\n` +
                 `› **User:** ${targetUser.username}\n` +
                 `└ **Status:** Activated\n` +
@@ -113,7 +114,7 @@ module.exports = {
             try {
                 const dmContainer = new ContainerBuilder().addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(
-                        `### <:wrong:1500917527918678147> No-Prefix Revoked\n` +
+                        `### ${emojis.error} No-Prefix Revoked\n` +
                         `› **Notification:**\n` +
                         `└ Your No-Prefix has been removed.\n` +
                         `└ You must now use the prefix \`${client.config.prefix}\` for all commands.`

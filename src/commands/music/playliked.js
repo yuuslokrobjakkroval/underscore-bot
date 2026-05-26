@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const User = require('../../database/models/user');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'playliked',
@@ -14,7 +15,7 @@ module.exports = {
 
         if (!userData || !userData.likedSongs || userData.likedSongs.length === 0) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> You haven't liked any songs yet!`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} You haven't liked any songs yet!`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -38,7 +39,7 @@ module.exports = {
         const vc = message.member.voice.channel;
         if (!vc) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> You need to be in a voice channel.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} You need to be in a voice channel.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -78,14 +79,14 @@ module.exports = {
             if (!player.playing && !player.paused) player.play();
             const container = new ContainerBuilder().addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    `> <:feather:1500912679487799519> Successfully queued **${addedCount}** liked songs.\n` +
+                    `> ${emojis.feather} Successfully queued **${addedCount}** liked songs.\n` +
                     (limitApplied ? `> ✨ *Premium required for more than **${LIKED_LIMIT}** songs.*` : '')
                 )
             );
             return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });
         } else {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Could not resolve any of your liked songs for playback.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} Could not resolve any of your liked songs for playback.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }

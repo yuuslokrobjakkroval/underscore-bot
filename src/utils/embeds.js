@@ -1,4 +1,5 @@
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('./emojis');
 
 /**
  * Standard CV2 Response Generator
@@ -23,7 +24,7 @@ const createCV2Response = (content) => {
 };
 
 module.exports = {
-    music: (content) => createCV2Response(`> <:music:1500923048646152284> Music | ${content}`),
-    success: (content) => createCV2Response(`> <:check_black:1500924675511812208> | ${content}`),
-    error: (content) => createCV2Response(`> <:wrong:1500917527918678147> Error | ${content}`)
+    music: (content) => createCV2Response(`> ${emojis.music} Music | ${content}`),
+    success: (content) => createCV2Response(`> ${emojis.check} | ${content}`),
+    error: (content) => createCV2Response(`> ${emojis.error} Error | ${content}`)
 };

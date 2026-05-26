@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const User = require('../../database/models/user');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'dislike',
@@ -33,7 +34,7 @@ module.exports = {
 
         if (!player || !player.queue.current) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> No music playing to dislike (or provide a name).`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} No music playing to dislike (or provide a name).`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -55,7 +56,7 @@ module.exports = {
             });
         } catch (error) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Failed to remove track.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} Failed to remove track.`)
             );
             return message.reply({ 
                 components: [errContainer.toJSON()], 

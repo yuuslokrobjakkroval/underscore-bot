@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const User = require('../../database/models/user');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'like',
@@ -15,7 +16,7 @@ module.exports = {
         const user = isInteraction ? message.user : message.author;
         if (!player || !player.queue.current) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> No music playing.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} No music playing.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -70,7 +71,7 @@ module.exports = {
         } catch (error) {
             client.logger.error(`Like command error: ${error.stack}`);
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Failed to save track.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} Failed to save track.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }

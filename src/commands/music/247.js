@@ -1,4 +1,5 @@
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: '247',
@@ -31,7 +32,7 @@ module.exports = {
         const container = new ContainerBuilder()
             .addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    `> <a:black_vinyl:1500920467379191990> **24/7 Mode:** ${player.data.twentyFourSeven ? 'Enabled' : 'Disabled'}\n` +
+                    `> ${emojis.vinyl} **24/7 Mode:** ${player.data.twentyFourSeven ? 'Enabled' : 'Disabled'}\n` +
                     `> The bot will ${player.data.twentyFourSeven ? 'now stay in the voice channel forever.' : 'now leave automatically if alone.'}`
                 )
             );

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'nodes',
@@ -8,7 +9,7 @@ module.exports = {
         .setDescription('Check Lavalink node status'),
     async execute(client, message, args) {
         const nodes = client.manager.shoukaku.nodes;
-        let nodeInfo = `### <a:r_heart_black_1:1500923805244063786> Lavalink Nodes\n`;
+        let nodeInfo = `### ${emojis.heart} Lavalink Nodes\n`;
 
         nodes.forEach((node, name) => {
             const status = node.state === 1 ? '🟢 Online' : '🔴 Offline';

@@ -1,6 +1,7 @@
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const path = require('path');
 const fs = require('fs');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'reload',
@@ -8,7 +9,7 @@ module.exports = {
     async execute(client, message, args) {
         if (!client.config.owners.includes(message.author.id)) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> This command is restricted to bot developers.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} This command is restricted to bot developers.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -16,7 +17,7 @@ module.exports = {
         const commandName = args[0]?.toLowerCase();
         if (!commandName) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Please provide a command name to reload (or \`all\`).`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} Please provide a command name to reload (or \`all\`).`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -41,13 +42,13 @@ module.exports = {
                 }
 
                 const container = new ContainerBuilder().addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(`> <:check_black:1500924675511812208> Successfully reloaded **${count}** commands.`)
+                    new TextDisplayBuilder().setContent(`> ${emojis.check} Successfully reloaded **${count}** commands.`)
                 );
                 return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });
             } catch (error) {
                 client.logger.error(`Reload all error: ${error.stack}`);
                 const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                    new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Failed to reload all commands: \`${error.message}\``)
+                    new TextDisplayBuilder().setContent(`> ${emojis.error} Failed to reload all commands: \`${error.message}\``)
                 );
                 return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
             }
@@ -57,7 +58,7 @@ module.exports = {
 
         if (!command) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Command \`${commandName}\` not found.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} Command \`${commandName}\` not found.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -79,7 +80,7 @@ module.exports = {
 
         if (!folderName) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Could not locate command file.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} Could not locate command file.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -93,13 +94,13 @@ module.exports = {
             client.commands.set(newCommand.name, newCommand);
 
             const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:check_black:1500924675511812208> Successfully reloaded command: **${newCommand.name}**`)
+                new TextDisplayBuilder().setContent(`> ${emojis.check} Successfully reloaded command: **${newCommand.name}**`)
             );
             return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });
         } catch (error) {
             client.logger.error(`Reload error: ${error.stack}`);
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Failed to reload command: \`${error.message}\``)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} Failed to reload command: \`${error.message}\``)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }

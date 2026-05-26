@@ -14,6 +14,7 @@ const { formatTime } = require('../../utils/formatters');
 const metadata = require('../../utils/metadata');
 const resolver = require('../../utils/resolver');
 const logger = require('../../utils/logger');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'search',
@@ -46,7 +47,7 @@ module.exports = {
         } catch (e) {
 
             logger.error(`Search command failed: ${e.message || JSON.stringify(e)}`);
-            const err = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:wrong:1500917527918678147> **Search Failed:** The music server is currently unavailable.`));
+            const err = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.error} **Search Failed:** The music server is currently unavailable.`));
             return isInteraction ? message.editReply({ components: [err.toJSON()], flags: MessageFlags.IsComponentsV2 }) : message.reply({ components: [err.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
 
@@ -55,7 +56,7 @@ module.exports = {
         const multiple = 5;
 
         if (tracks.length === 0) {
-            const noRes = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:wrong:1500917527918678147> **No results found for \`${query}\`**`));
+            const noRes = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.error} **No results found for \`${query}\`**`));
             return isInteraction ? message.editReply({ components: [noRes.toJSON()], flags: MessageFlags.IsComponentsV2 }) : message.reply({ components: [noRes.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
 
@@ -65,7 +66,7 @@ module.exports = {
             const currentBatch = tracks.slice(start, start + multiple);
             const totalPages = Math.ceil(tracks.length / multiple);
 
-            container.addTextDisplayComponents(new TextDisplayBuilder().setContent(`### <:music:1500923048646152284> Search Results\n-# Showing results for: \`${metadata.truncate(query, 30)}\``));
+            container.addTextDisplayComponents(new TextDisplayBuilder().setContent(`### ${emojis.music} Search Results\n-# Showing results for: \`${metadata.truncate(query, 30)}\``));
             container.addSeparatorComponents(new SeparatorBuilder());
 
             currentBatch.forEach((track, i) => {
@@ -151,7 +152,7 @@ module.exports = {
                     
                     const success = new ContainerBuilder().addSectionComponents(
                         new SectionBuilder()
-                            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:check_black:1500924675511812208> Added [${track.title}](${track.uri}) to queue.`))
+                            .addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.check} Added [${track.title}](${track.uri}) to queue.`))
                             .setThumbnailAccessory(new ThumbnailBuilder().setURL(metadata.getMediumThumbnail(track.thumbnail)))
                     );
                     
@@ -194,7 +195,7 @@ module.exports = {
                 tracks.forEach(t => player.queue.add(t));
                 
                 const success = new ContainerBuilder().addSectionComponents(
-                    new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`<:check_black:1500924675511812208> Added all **${tracks.length}** results to queue.`))
+                    new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.check} Added all **${tracks.length}** results to queue.`))
                 );
                 
                 await i.reply({ components: [success.toJSON()], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });

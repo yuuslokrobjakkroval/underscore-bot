@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'bassboost',
@@ -12,7 +13,7 @@ module.exports = {
         const player = client.manager.players.get(guildId);
         if (!player) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> No music playing.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} No music playing.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
@@ -36,7 +37,7 @@ module.exports = {
         }
 
         const container = new ContainerBuilder().addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(`> <:check_black:1500924675511812208> Bassboost has been **${!current ? 'enabled' : 'disabled'}**.`)
+            new TextDisplayBuilder().setContent(`> ${emojis.check} Bassboost has been **${!current ? 'enabled' : 'disabled'}**.`)
         );
         return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });
     }

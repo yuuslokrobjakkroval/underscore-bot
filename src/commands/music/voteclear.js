@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'voteclear',
@@ -12,7 +13,7 @@ module.exports = {
         const user = isInteraction ? message.user : message.author;
         const player = client.manager.players.get(guildId);
         const createErr = (text) => ({
-            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> ${text}`)).toJSON()],
+            components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.error} ${text}`)).toJSON()],
             flags: MessageFlags.IsComponentsV2
         });
 
@@ -33,7 +34,7 @@ module.exports = {
         if (votes.length >= required) {
             player.queue.clear();
             player.data.clearVotes = [];
-            const container = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> <:check_black:1500924675511812208> Queue clear vote passed! Queue has been emptied.`));
+            const container = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> ${emojis.check} Queue clear vote passed! Queue has been emptied.`));
             return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });
         } else {
             const container = new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`> 🗳️ Clear vote added: \`${votes.length}/${required}\``));

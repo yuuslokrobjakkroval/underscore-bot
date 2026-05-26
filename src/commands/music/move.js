@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'move',
@@ -14,12 +15,12 @@ module.exports = {
         const player = client.manager.players.get(guildId);
         const createResponse = (text, isError = false) => {
             const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`${isError ? '> <:wrong:1500917527918678147> ' : '> <:check_black:1500924675511812208> '}${text}`)
+                new TextDisplayBuilder().setContent(`${isError ? `> ${emojis.error} ` : `> ${emojis.check} `}${text}`)
             );
             return { content: null, embeds: [], components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
         };
 
-        if (!player) return message.reply(createResponse('<:blacklist:1500921270378959000> There is no music playing.', true));
+        if (!player) return message.reply(createResponse('${emojis.blacklist} There is no music playing.', true));
 
         const from = isInteraction ? message.options.getInteger('from') : parseInt(args[0]);
         const to = isInteraction ? message.options.getInteger('to') : parseInt(args[1]);
@@ -29,7 +30,7 @@ module.exports = {
             return message.reply(createResponse(`**Invalid Usage!**\n> **Correct Usage:** \`${p}move <from> <to>\` (e.g. \`${p}move 5 1\`)\n> *Range must be between 1 and ${player.queue.length}.*`, true));
         }
 
-        if (from === to) return message.reply(createResponse('<:blacklist:1500921270378959000> Track is already at that position.', true));
+        if (from === to) return message.reply(createResponse('${emojis.blacklist} Track is already at that position.', true));
 
         // Use direct array manipulation if remove/add are failing
         const track = player.queue[from - 1];

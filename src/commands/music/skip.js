@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 const createMsg = (text) => ({
     components: [new ContainerBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(text)).toJSON()],
@@ -20,18 +21,18 @@ module.exports = {
 
             const player = client.manager.players.get(guildId);
             if (!player) {
-                const res = createMsg('> <:wrong:1500917527918678147> There is no music playing.');
+                const res = createMsg(`> ${emojis.error} There is no music playing.`);
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
             const vc = member.voice.channel;
             if (!vc || vc.id !== player.voiceId) {
-                const res = createMsg('> <:wrong:1500917527918678147> You need to be in the same voice channel as the bot.');
+                const res = createMsg(`> ${emojis.error} You need to be in the same voice channel as the bot.`);
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
             player.skip();
-            const res = createMsg('> <:check_black:1500924675511812208> Skipped the current song.');
+            const res = createMsg(`> ${emojis.check} Skipped the current song.`);
             return isInteraction ? message.reply(res) : message.reply(res);
         } catch (err) {
             client.logger.error(`Skip Command Error: ${err.stack}`);

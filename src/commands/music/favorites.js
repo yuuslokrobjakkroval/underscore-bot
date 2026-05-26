@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const User = require('../../database/models/user');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'favorites',
@@ -15,7 +16,7 @@ module.exports = {
 
         if (!userData || !userData.likedSongs || userData.likedSongs.length === 0) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> You haven't liked any songs yet!`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} You haven't liked any songs yet!`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }

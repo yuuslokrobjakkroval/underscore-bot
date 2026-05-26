@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags, SectionBuilder, ThumbnailBuilder, SeparatorBuilder, SeparatorSpacingSize } = require('discord.js');
 const lyricsFinder = require('lyrics-finder');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'lyrics',
@@ -36,7 +37,7 @@ module.exports = {
                 .addSectionComponents(
                     new SectionBuilder()
                         .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(`## <:lyrics:1500943407827128372> Lyrics: ${title.substring(0, 50)}`),
+                            new TextDisplayBuilder().setContent(`## ${emojis.lyrics} Lyrics: ${title.substring(0, 50)}`),
                             new TextDisplayBuilder().setContent(lyrics.length > 3000 ? lyrics.substring(0, 3000) + '...' : lyrics)
                         )
                 )
@@ -46,7 +47,7 @@ module.exports = {
             return isInteraction ? message.editReply(res) : message.reply(res);
         } catch (error) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> Failed to fetch lyrics.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} Failed to fetch lyrics.`)
             );
             const res = { components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 };
             return isInteraction ? message.editReply(res) : message.reply(res);

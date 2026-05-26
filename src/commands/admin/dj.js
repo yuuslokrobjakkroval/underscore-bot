@@ -1,5 +1,6 @@
 const { ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const Guild = require('../../database/models/guild');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'dj',
@@ -7,7 +8,7 @@ module.exports = {
     async execute(client, message, args) {
         const createResponse = (text, isError = false) => {
             const container = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`${isError ? '### <:wrong:1500917527918678147> Error\n> ' : '### <:black_config:1500924211437371602> DJ System\n> '}${text}`)
+                new TextDisplayBuilder().setContent(`${isError ? `### ${emojis.error} Error\n> ` : `### ${emojis.config} DJ System\n> `}${text}`)
             );
             return { components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
         };
@@ -38,16 +39,16 @@ module.exports = {
         } else if (sub === 'list') {
             const data = await Guild.findOne({ guildId: message.guild.id });
             const currentRole = data?.djRole ? `<@&${data.djRole}>` : '`None`';
-            message.reply(createResponse(`### <:admin:1500924079857864724> DJ Role List\n> **Primary Role:** ${currentRole}`));
+            message.reply(createResponse(`### ${emojis.admin} DJ Role List\n> **Primary Role:** ${currentRole}`));
         } else if (sub === 'mode') {
-            message.reply(createResponse('### <:admin:1500924079857864724> DJ Mode\n> DJ Mode is currently set to **Standard**. (Toggle coming soon)'));
+            message.reply(createResponse(`### ${emojis.admin} DJ Mode\n> DJ Mode is currently set to **Standard**. (Toggle coming soon)`));
         } else {
             const data = await Guild.findOne({ guildId: message.guild.id });
             const currentRole = data?.djRole ? `<@&${data.djRole}>` : '`None`';
 
             const container = new ContainerBuilder().addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(
-                    `### <:black_config:1500924211437371602> DJ System Status\n` +
+                    `### ${emojis.config} DJ System Status\n` +
                     `> **Current DJ Role:** ${currentRole}\n\n` +
                     `> **Commands:**\n` +
                     `╰ \`${client.config.prefix}dj set @Role\`\n` +

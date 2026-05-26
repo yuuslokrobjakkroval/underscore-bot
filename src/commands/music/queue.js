@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 const createMsg = (text) => ({
     content: null,
@@ -26,7 +27,7 @@ module.exports = {
 
             const player = client.manager.players.get(guildId);
             if (!player) {
-                const res = createMsg('> <:wrong:1500917527918678147> There is no music playing.');
+                const res = createMsg('> ${emojis.error} There is no music playing.');
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
@@ -34,14 +35,14 @@ module.exports = {
             const queue = player.queue;
 
             if (!current && !queue.length) {
-                const res = createMsg('> <:wrong:1500917527918678147> The queue is empty.');
+                const res = createMsg('> ${emojis.error} The queue is empty.');
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
             // Truncate Now Playing title (limit to 45 for header)
             const currentTitle = truncate(current.title, 45);
 
-            let queueString = `### <a:black_vinyl:1500920467379191990> Current Queue\n`;
+            let queueString = `### ${emojis.vinyl} Current Queue\n`;
             queueString += `> **Now Playing:** [${currentTitle}](${current.uri}) \`[${formatDuration(current.length)}]\`\n\n`;
 
             if (queue.length > 0) {

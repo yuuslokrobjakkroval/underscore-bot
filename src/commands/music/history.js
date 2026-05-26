@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const User = require('../../database/models/user');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'history',
@@ -15,12 +16,12 @@ module.exports = {
 
         if (!userData || !userData.history || userData.history.length === 0) {
             const errContainer = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:wrong:1500917527918678147> No history found.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.error} No history found.`)
             );
             return message.reply({ components: [errContainer.toJSON()], flags: MessageFlags.IsComponentsV2 });
         }
 
-        let historyText = `### <:lyrics:1500943407827128372> Your History\n`;
+        let historyText = `### ${emojis.lyrics} Your History\n`;
         userData.history.reverse().slice(0, 10).forEach((t, i) => {
             historyText += `> \`${i + 1}.\` [${t.title.substring(0, 40)}](${t.uri}) · \`${t.author}\`\n`;
         });

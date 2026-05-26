@@ -1,6 +1,7 @@
 const autoplay = require('../../systems/autoplay');
 const logger = require('../../utils/logger');
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'playerEmpty', // Kazagumo event when queue is empty
@@ -27,7 +28,7 @@ module.exports = {
         const channel = client.channels.cache.get(player.textId);
         if (channel) {
             const endMsg = new ContainerBuilder().addTextDisplayComponents(
-                new TextDisplayBuilder().setContent(`> <:blacklist:1500921270378959000> **Queue Finished.** Disconnecting soon due to inactivity.`)
+                new TextDisplayBuilder().setContent(`> ${emojis.blacklist} **Queue Finished.** Disconnecting soon due to inactivity.`)
             );
             channel.send({
                 components: [endMsg.toJSON()],

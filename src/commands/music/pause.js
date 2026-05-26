@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const emojis = require('../../utils/emojis');
 
 module.exports = {
     name: 'pause',
@@ -18,30 +19,30 @@ module.exports = {
             const createResponse = (text, isError = false) => {
                 const container = new ContainerBuilder().addSectionComponents(
                     new SectionBuilder().addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`${isError ? '> <:wrong:1500917527918678147> ' : '> <:check_black:1500924675511812208> '}${text}`)
+                        new TextDisplayBuilder().setContent(`${isError ? `> ${emojis.error} ` : `> ${emojis.check} `}${text}`)
                     )
                 );
                 return { components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 };
             };
 
             if (!player) {
-                const res = createResponse('<:blacklist:1500921270378959000> There is no music playing.', true);
+                const res = createResponse('${emojis.blacklist} There is no music playing.', true);
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
             const vc = member.voice.channel;
             if (!vc || vc.id !== player.voiceId) {
-                const res = createResponse('<:blacklist:1500921270378959000> You need to be in the same voice channel as the bot.', true);
+                const res = createResponse('${emojis.blacklist} You need to be in the same voice channel as the bot.', true);
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
             if (player.paused) {
-                const res = createResponse('<:blacklist:1500921270378959000> The player is already paused.', true);
+                const res = createResponse('${emojis.blacklist} The player is already paused.', true);
                 return isInteraction ? message.reply(res) : message.reply(res);
             }
 
             player.pause(true);
-            const res = createResponse('<:check_black:1500924675511812208> Paused the current track.');
+            const res = createResponse(`${emojis.check} Paused the current track.`);
             return isInteraction ? message.reply(res) : message.reply(res);
         } catch (err) {
             client.logger.error(`Pause Command Error: ${err.stack}`);
