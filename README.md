@@ -171,7 +171,7 @@ src/
 - Global slash command deployment can take time to appear in Discord.
 - Lavalink must be online before music playback can work.
 - The bot uses MongoDB for user history, playlists, guild settings, premium state, and profile data.
-- If you run multiple copies with the same prefix, set `MUSIC_BOT_IDS` on every bot so only one bot claims a voice channel for `play` and `join`.
+- If you run multiple copies with the same prefix, set `MUSIC_BOT_IDS` on every bot so only one bot handles prefix/no-prefix commands for a voice channel.
 
 ## Recommended Next Improvements
 

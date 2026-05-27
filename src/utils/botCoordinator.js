@@ -11,6 +11,10 @@ function getFamilyBotIds(client) {
     return [...new Set([...configured, client.user.id])];
 }
 
+function getPrimaryBotId(client) {
+    return getFamilyBotIds(client)[0];
+}
+
 function isInteraction(message) {
     return !!message.options;
 }
@@ -96,7 +100,46 @@ async function resolveMusicBot(client, message) {
     return { allowed: true, voiceChannel, claimed: true };
 }
 
+async function resolveCommandBot(client, message, options = {}) {
+    if (options.isDirectMention || isInteraction(message)) {
+        return { allowed: true };
+    }
+
+    const familyBotIds = getFamilyBotIds(client);
+    if (familyBotIds.length <= 1) {
+        return { allowed: true };
+    }
+
+    const voiceChannel = message.member?.voice?.channel;
+    if (!voiceChannel) {
+        const primaryBotId = getPrimaryBotId(client);
+
+        return {
+            allowed: client.user.id === primaryBotId,
+            silent: client.user.id !== primaryBotId,
+            reason: `Please use <@${primaryBotId}> for commands when you are not in a voice channel.`,
+        };
+    }
+
+    const existingBot = findFamilyBotInVoice(voiceChannel, familyBotIds);
+    if (existingBot) {
+        return {
+            allowed: existingBot.id === client.user.id,
+            silent: existingBot.id !== client.user.id,
+            reason: `You already have <@${existingBot.id}> in your voice channel.`,
+        };
+    }
+
+    const claimed = await claimVoiceChannel(client, voiceChannel);
+    return {
+        allowed: claimed,
+        silent: !claimed,
+        reason: 'Another music bot is already being assigned to your voice channel.',
+    };
+}
+
 module.exports = {
     resolveMusicBot,
+    resolveCommandBot,
     getFamilyBotIds,
 };

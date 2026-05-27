@@ -1,6 +1,7 @@
 const User = require('../../database/models/user');
 const helpUI = require('../../ui/helpUI');
 const emojis = require('../../utils/emojis');
+const { resolveCommandBot } = require('../../utils/botCoordinator');
 const noPrefixCache = new Map();
 
 const event = {
@@ -23,9 +24,11 @@ const event = {
         const prefix = client.config.prefix;
         let commandName = '';
         let args = [];
+        let isDirectMention = false;
 
         // Check Prefix (Standard or Mention)
         if (mentionMatch) {
+            isDirectMention = true;
             args = message.content.slice(mentionMatch[0].length).trim().split(/ +/);
             commandName = args.shift().toLowerCase();
         } else if (message.content.startsWith(prefix)) {
@@ -75,6 +78,12 @@ const event = {
 
         const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
         if (!command) return;
+
+        const botCheck = await resolveCommandBot(client, message, { command, isDirectMention });
+        if (!botCheck.allowed) {
+            if (botCheck.silent) return;
+            return message.reply(botCheck.reason).catch(() => { });
+        }
 
         // Premium Check
         if (command.premium) {

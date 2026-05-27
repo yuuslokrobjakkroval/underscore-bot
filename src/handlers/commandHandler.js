@@ -14,6 +14,7 @@ module.exports = async (client) => {
         for (const file of commandFiles) {
             const command = require(`../commands/${folder}/${file}`);
             if (command.name) {
+                command.category = command.category || folder;
                 client.commands.set(command.name, command);
                 
                 // Collect Slash Command data for deployment
