@@ -116,13 +116,13 @@ module.exports = {
 
       let statusText = `**${emojis.feather} Feather Premium Status**\n\n`;
       statusText += `› **User Premium:** ${userPrem ? "Enabled ✨" : "Disabled"}\n`;
-      if (isOwner) statusText += `└ \`Lifetime Owner Perk\`\n`;
+      if (isOwner) statusText += `\`Lifetime Owner Perk\`\n`;
       else if (userData?.premiumUntil)
-        statusText += `└ Expires <t:${Math.floor(userData.premiumUntil.getTime() / 1000)}:R>\n`;
+        statusText += `Expires <t:${Math.floor(userData.premiumUntil.getTime() / 1000)}:R>\n`;
 
       statusText += `\n› **Guild Premium:** ${guildPrem ? "Enabled ✨" : "Disabled"}\n`;
       if (guildData?.premiumUntil)
-        statusText += `└ Expires <t:${Math.floor(guildData.premiumUntil.getTime() / 1000)}:R>\n`;
+        statusText += `Expires <t:${Math.floor(guildData.premiumUntil.getTime() / 1000)}:R>\n`;
 
       statusText += `\n*Pro filters, 24/7 mode, and No-Prefix active.*`;
 
@@ -170,9 +170,9 @@ module.exports = {
               `### ${emojis.error} Premium Revoked\n` +
                 `Your **Feather Premium** subscription has been revoked by an administrator.\n\n` +
                 `**Impact:**\n` +
-                `└ No-Prefix access removed.\n` +
-                `└ Premium filters disabled.\n` +
-                `└ Regular usage limits reapplied.\n\n` +
+                `No-Prefix access removed.\n` +
+                `Premium filters disabled.\n` +
+                `Regular usage limits reapplied.\n\n` +
                 `*If you believe this is a mistake, please contact support.*`,
             ),
           );
@@ -215,9 +215,9 @@ module.exports = {
                 `### ${emojis.error} Guild Premium Revoked\n` +
                   `Premium status has been revoked from your server **${targetGuild.name}**.\n\n` +
                   `**Impact:**\n` +
-                  `└ 24/7 mode disabled.\n` +
-                  `└ Queue limits reapplied.\n` +
-                  `└ Special filters removed.\n\n` +
+                  `24/7 mode disabled.\n` +
+                  `Queue limits reapplied.\n` +
+                  `Special filters removed.\n\n` +
                   `*If you believe this is a mistake, please contact support.*`,
               ),
             );
@@ -299,12 +299,12 @@ module.exports = {
           `Your server **${targetGuild.name}** have been given **Feather Premium** for ${durationText}.\n\n` +
           `${emojis.blackdot} **Exclusive Server Perks:**\n` +
           `› **24/7 Mode**\n` +
-          `└ Keep the bot in voice channels indefinitely.\n\n` +
+          `Keep the bot in voice channels indefinitely.\n\n` +
           `› **Unlimited Queue**\n` +
-          `└ No restrictions on queue size for all members.\n\n` +
+          `No restrictions on queue size for all members.\n\n` +
           `› **Enhanced Filters**\n` +
-          `└ Access 8D, Nightcore, and Vaporwave filters.\n` +
-          `└ **Smart Autoplay** Intelligent song recommendations.\n\n` +
+          `Access 8D, Nightcore, and Vaporwave filters.\n` +
+          `**Smart Autoplay** Intelligent song recommendations.\n\n` +
           `*${days > 0 ? `Expires: <t:${Math.floor(expiryDate.getTime() / 1000)}:R>` : "Duration: Lifetime Access"}*`;
 
         const dmContainer = new ContainerBuilder().addTextDisplayComponents(
@@ -347,9 +347,9 @@ module.exports = {
       const content =
         `${emojis.feather} **Feather Premium Activated**\n` +
         `› ${emojis.blackdot} **Status:** Activated ✨\n` +
-        `└ **Server:** ${guildName}\n` +
-        `└ **Duration:** ${durationText}\n` +
-        `└ **Expires:** ${expiryText}`;
+        `**Server:** ${guildName}\n` +
+        `**Duration:** ${durationText}\n` +
+        `**Expires:** ${expiryText}`;
 
       return createMsg("Guild Premium Activated", content);
     }
@@ -413,15 +413,15 @@ module.exports = {
               `**You have been given Feather Premium** for ${durationText}. Enjoy your exclusive benefits:\n\n` +
               `${emojis.blackdot} **Exclusive Benefits:**\n` +
               `› **No-Prefix**\n` +
-              `└ Execute commands directly without the prefix.\n\n` +
+              `Execute commands directly without the prefix.\n\n` +
               `› **24/7 Mode**\n` +
-              `└ Maintain bot connection in voice channels indefinitely.\n\n` +
+              `Maintain bot connection in voice channels indefinitely.\n\n` +
               `› **Pro Audio Filters**\n` +
-              `└ Enhanced audio processing (8D, Nightcore, Vaporwave).\n\n` +
+              `Enhanced audio processing (8D, Nightcore, Vaporwave).\n\n` +
               `› **Unlimited Access**\n` +
-              `└ No restrictions on queue size or liked songs.\n\n` +
+              `No restrictions on queue size or liked songs.\n\n` +
               `› **Smart Autoplay**\n` +
-              `└ Receive intelligent song recommendations.\n\n` +
+              `Receive intelligent song recommendations.\n\n` +
               `*Thank you for supporting Feather! Type \`/premium status\` to view your details.*`,
           ),
         );
@@ -443,9 +443,9 @@ module.exports = {
       const content =
         `**${emojis.feather} Feather Premium Activated**\n` +
         `› ${emojis.blackdot} ** Status:** Activated ✨\n` +
-        `└ ** User:** ${targetUser.username} \n` +
-        `└ ** Duration:** ${durationText} \n` +
-        `└ ** Expires:** ${expiryText} `;
+        `** User:** ${targetUser.username} \n` +
+        `** Duration:** ${durationText} \n` +
+        `** Expires:** ${expiryText} `;
 
       return createMsg("User Premium Activated", content);
     }

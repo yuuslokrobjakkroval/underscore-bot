@@ -12,4 +12,9 @@ module.exports = {
     success: process.env.SUCCESS_COLOR || "#22c55e",
     error: process.env.ERROR_COLOR || "#ef4444",
   },
+  link: {
+    invite: `https://discord.com/api/oauth2/authorize?client_id=${process.env.CLIENT_ID}&permissions=8&scope=bot%20applications.commands`,
+    support: "https://discord.gg/pookie",
+    website: "https://pookie.app",
+  },
 };

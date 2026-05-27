@@ -118,7 +118,7 @@ module.exports = {
         const guildObj = isInteraction ? message.guild : message.guild;
         const member = guildObj.members.cache.get(targetUser.id);
         if (member && member.voice.channelId === player.voiceId) {
-          liveActivityText = `\n\n› **Live Activity**\n└ ${emojis.vibe} Currently listening to **${player.queue.current.title.substring(0, 45)}**`;
+          liveActivityText = `\n\n› **Live Activity**\n${emojis.vibe} Currently listening to **${player.queue.current.title.substring(0, 45)}**`;
         }
       }
 
