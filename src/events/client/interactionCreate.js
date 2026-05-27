@@ -151,14 +151,7 @@ module.exports = {
             const guildList = pageGuilds
               .map((g, idx) => {
                 const createdAt = Math.floor(g.createdTimestamp / 1000);
-                return (
-                  `**${start + idx + 1}.** ${g.name}\n` +
-                  `├ ID: \`${g.id}\`\n` +
-                  `├ Members: \`${g.memberCount}\`\n` +
-                  `├ Owner: \`${g.ownerId}\`\n` +
-                  `├ Created: <t:${createdAt}:R>\n` +
-                  `└ Channels: \`${g.channels.cache.size}\` | Roles: \`${g.roles.cache.size}\`\n`
-                );
+                return `**${start + idx + 1}.** ${g.name} | \`${g.memberCount}\` members | <t:${createdAt}:R>`;
               })
               .join("\n");
 
