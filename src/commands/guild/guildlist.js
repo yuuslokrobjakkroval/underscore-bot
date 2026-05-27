@@ -54,15 +54,7 @@ module.exports = {
         })
         .join("\n");
 
-      const container = new ContainerBuilder();
-      const section = new SectionBuilder().addTextDisplayComponents(
-        new TextDisplayBuilder().setContent(
-          `### 🏢 Guild List\n> Page \`${page}/${totalPages}\` (Total: \`${guilds.length}\` guilds)`,
-        ),
-        new TextDisplayBuilder().setContent(guildList),
-      );
-
-      container.addSectionComponents(section);
+      const content = `### 🏢 Guild List\nPage \`${page}/${totalPages}\` (Total: \`${guilds.length}\` guilds)\n\n${guildList}`;
 
       const buttons = new ActionRowBuilder();
       if (page > 1) {
@@ -92,8 +84,8 @@ module.exports = {
       }
 
       return {
-        components: [container.toJSON(), buttons.toJSON()],
-        flags: MessageFlags.IsComponentsV2,
+        content: content,
+        components: [buttons],
       };
     };
 

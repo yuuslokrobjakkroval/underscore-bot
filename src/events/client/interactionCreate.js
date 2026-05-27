@@ -126,12 +126,9 @@ module.exports = {
           // Guild List Pagination
           if (interaction.customId.startsWith("guildlist_")) {
             const {
-              ContainerBuilder,
-              TextDisplayBuilder,
               ActionRowBuilder,
               ButtonBuilder,
               ButtonStyle,
-              SectionBuilder,
             } = require("discord.js");
             const guilds = Array.from(client.guilds.cache.values());
             const guildsPerPage = 10;
@@ -155,15 +152,7 @@ module.exports = {
               })
               .join("\n");
 
-            const container = new ContainerBuilder();
-            const section = new SectionBuilder().addTextDisplayComponents(
-              new TextDisplayBuilder().setContent(
-                `### 🏢 Guild List\n> Page \`${page}/${totalPages}\` (Total: \`${guilds.length}\` guilds)`,
-              ),
-              new TextDisplayBuilder().setContent(guildList),
-            );
-
-            container.addSectionComponents(section);
+            const content = `### 🏢 Guild List\nPage \`${page}/${totalPages}\` (Total: \`${guilds.length}\` guilds)\n\n${guildList}`;
 
             const buttons = new ActionRowBuilder();
             if (page > 1) {
@@ -193,7 +182,8 @@ module.exports = {
             }
 
             return interaction.update({
-              components: [container.toJSON(), buttons.toJSON()],
+              content: content,
+              components: [buttons],
             });
           }
 
