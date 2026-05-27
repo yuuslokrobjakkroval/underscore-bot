@@ -4,7 +4,7 @@
  */
 const emojis = {
   // ── Player Controls ──────────────────────────────────────────────────────
-  backward: "<:jk_backward:1500921320236646522>",
+  backward: "<a:backwardsParrot:1508854537522384931> ",
   play: "<:icons_play:1500920780312285386>",
   pause: "<:pause:1500921090187202761>",
   stop: "<:stop:1500921641826258958>",
@@ -21,7 +21,7 @@ const emojis = {
   delete: "<:Delete:1500925771437314099>",
 
   // ── Branding / Navigation ────────────────────────────────────────────────
-  feather: "<:feather:1500912679487799519>",
+  feather: "<a:peachy:1459255820431921387>",
   music: "<:music:1500923048646152284>",
   navigation: "<:icons_navigation:1500937486107410542>",
   search: "<:search:1500924349878632509>",

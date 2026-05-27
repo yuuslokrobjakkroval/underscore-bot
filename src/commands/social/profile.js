@@ -128,15 +128,13 @@ module.exports = {
         const recent = userData.history.slice(-3).reverse();
         historyText = recent
           .map((t, i) => {
-            const isLast = i === recent.length - 1;
-            const bullet = isLast ? "└" : "├";
             const displayTitle =
               t.title.length > 35 ? `${t.title.substring(0, 35)}...` : t.title;
             const displayAuthor =
               t.author.length > 20
                 ? `${t.author.substring(0, 20)}...`
                 : t.author;
-            return `${bullet} **${displayTitle}** - *${displayAuthor}*`;
+            return `**${displayTitle}** - *${displayAuthor}*`;
           })
           .join("\n");
       }
@@ -149,16 +147,16 @@ module.exports = {
           ),
           new TextDisplayBuilder().setContent(
             `› **Account Tier**\n` +
-              `└ ${tierText}\n\n` +
+              `${tierText}\n\n` +
               `› **Listener Level**\n` +
-              `└ ${rankText}\n\n` +
+              `${rankText}\n\n` +
               `› **Library Statistics**\n` +
-              `├ ${emojis.file} **Playlists:** \` ${playlistCount} \` custom lists\n` +
-              `├ ${emojis.agHeart} **Favorites:** \` ${likedCount} \` saved songs\n` +
-              `└ ${emojis.hpBar} **History Size:** \` ${historyCount} \` tracks played\n\n` +
+              `${emojis.file} **Playlists:** \` ${playlistCount} \` custom lists\n` +
+              `${emojis.agHeart} **Favorites:** \` ${likedCount} \` saved songs\n` +
+              `${emojis.hpBar} **History Size:** \` ${historyCount} \` tracks played\n\n` +
               `› **Personal Music Charts**\n` +
-              `├ ${emojis.musicAnim} **Top Artist:** ${topArtistText}\n` +
-              `└ ${emojis.nowPlaying} **Favorite Song:** ${topSongText}\n\n` +
+              `${emojis.musicAnim} **Top Artist:** ${topArtistText}\n` +
+              `${emojis.nowPlaying} **Favorite Song:** ${topSongText}\n\n` +
               `› **Recent Listening History**\n` +
               historyText +
               liveActivityText,
