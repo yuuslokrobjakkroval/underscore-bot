@@ -201,7 +201,6 @@ module.exports = {
 
             return interaction.update({
               components: [container.toJSON(), buttons.toJSON()],
-              flags: MessageFlags.IsComponentsV2,
             });
           }
 
@@ -211,7 +210,6 @@ module.exports = {
               return interaction.update({
                 content: "✅ Guild leave cancelled.",
                 components: [],
-                flags: MessageFlags.Ephemeral,
               });
             }
 
@@ -226,7 +224,6 @@ module.exports = {
                 return interaction.update({
                   content: "❌ Guild not found.",
                   components: [],
-                  flags: MessageFlags.Ephemeral,
                 });
               }
 
@@ -234,7 +231,6 @@ module.exports = {
               return interaction.update({
                 content: `✅ Successfully left guild: **${targetGuild.name}**`,
                 components: [],
-                flags: MessageFlags.Ephemeral,
               });
             }
           }
