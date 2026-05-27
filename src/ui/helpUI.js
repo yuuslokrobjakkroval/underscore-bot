@@ -71,13 +71,13 @@ module.exports = {
             ),
             new TextDisplayBuilder().setContent(
               `ㅤ\n` +
-                `› **${emojis.music} Music**\n` +
+                `**${emojis.music} Music**\n` +
                 `*Core playback and audio effects*\n\n` +
-                `› **${emojis.heart} Social & Discovery**\n` +
+                `**${emojis.heart} Social & Discovery**\n` +
                 `*Playlists, Favorites & smart discovery*\n\n` +
-                `› **${emojis.admin} Admin**\n` +
+                `**${emojis.admin} Admin**\n` +
                 `*DJ system & developer tools*\n\n` +
-                `› **${emojis.config} Utility**\n` +
+                `**${emojis.config} Utility**\n` +
                 `*Bot stats & system information*\n\n` +
                 `*Select a category from the dropdown below.*`,
             ),
@@ -140,16 +140,16 @@ module.exports = {
             ),
             new TextDisplayBuilder().setContent(
               `ㅤ\n` +
-                `› **Core Playback**\n` +
+                `**Core Playback**\n` +
                 `\`play\`, \`skip\`, \`stop\`, \`pause\`, \`resume\`, \`nowplaying\`, \`join\`, \`leave\`, \`search\`, \`playlofi\`\n` +
                 `*Usage:* \`${p}play\` · \`${p}playlofi\`\n\n` +
-                `› **Player Controls**\n` +
+                `**Player Controls**\n` +
                 `\`queue\`, \`loop\`, \`shuffle\`, \`volume\`, \`replay\`, \`clear\`, \`move\`, \`remove\`\n` +
                 `*Usage:* \`${p}volume 80\`\n\n` +
-                `› **Free Effects**\n` +
+                `**Free Effects**\n` +
                 `\`lyrics\`, \`bassboost\`, \`resetfilters\`\n` +
                 `*Usage:* \`${p}bassboost high\`\n\n` +
-                `› **⭐ Premium Audio Features**\n` +
+                `**⭐ Premium Audio Features**\n` +
                 `\`247\` (24/7 playback), \`8d\`, \`nightcore\`, \`vaporwave\`\n` +
                 `*Usage:* \`${p}nightcore\``,
             ),
@@ -191,17 +191,17 @@ module.exports = {
             ),
             new TextDisplayBuilder().setContent(
               `ㅤ\n` +
-                `› **Profile & Interaction**\n` +
+                `**Profile & Interaction**\n` +
                 `\`profile\`, \`voteskip\`, \`voteclear\`\n` +
                 `*Usage:* \`${p}profile\` · \`${p}voteskip\`\n\n` +
-                `› **Personal Library**\n` +
+                `**Personal Library**\n` +
                 `\`like\`, \`dislike\`, \`favorites\`, \`playliked\`, \`history\`\n` +
                 `*Usage:* \`${p}like\` · \`${p}playliked\`\n\n` +
-                `› **Custom Playlists**\n` +
+                `**Custom Playlists**\n` +
                 `\`playlist create\`, \`playlist add\`, \`playlist play\`, \`playlist list\`\n` +
                 `\`playlist view\`, \`playlist remove\`, \`playlist delete\`\n` +
                 `*Usage:* \`${p}playlist play <name>\` · \`${p}playlist create <name>\`\n\n` +
-                `› **Smart Discovery**\n` +
+                `**Smart Discovery**\n` +
                 `\`recommend\`, \`similar\`\n` +
                 `\`autoplay\` (⭐ Premium)`,
             ),
@@ -243,12 +243,12 @@ module.exports = {
             ),
             new TextDisplayBuilder().setContent(
               `ㅤ\n` +
-                `› **DJ System (Moderators)**\n` +
+                `**DJ System (Moderators)**\n` +
                 `\`dj set\`, \`dj reset\`, \`dj list\`, \`dj mode\`\n` +
                 `*Usage:* \`${p}dj set @Role\`\n\n` +
-                `› **Billing & Status**\n` +
+                `**Billing & Status**\n` +
                 `\`premium status\` (Check your current premium tier)\n\n` +
-                `› **👑 Owner/Developer Commands**\n` +
+                `**👑 Owner/Developer Commands**\n` +
                 `\`premium grant/revoke\`, \`noprefix\`, \`eval\`, \`reload\`, \`reboot\`\n` +
                 `*Usage:* \`${p}premium grant @User 30d\``,
             ),
@@ -290,10 +290,10 @@ module.exports = {
             ),
             new TextDisplayBuilder().setContent(
               `ㅤ\n` +
-                `› **System Information**\n` +
+                `**System Information**\n` +
                 `\`help\`, \`stats\`, \`ping\`, \`uptime\`, \`nodes\`, \`devs\`\n` +
                 `*Usage:* \`${p}stats\`\n\n` +
-                `› **Links & Support**\n` +
+                `**Links & Support**\n` +
                 `\`invite\`, \`support\``,
             ),
           )

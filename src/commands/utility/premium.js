@@ -115,7 +115,7 @@ module.exports = {
         (!guildData.premiumUntil || guildData.premiumUntil > Date.now());
 
       let statusText = `**${emojis.feather} Feather Premium Status**\n\n`;
-      statusText += `› **User Premium:** ${userPrem ? "Enabled ✨" : "Disabled"}\n`;
+      statusText += `**User Premium:** ${userPrem ? "Enabled ✨" : "Disabled"}\n`;
       if (isOwner) statusText += `\`Lifetime Owner Perk\`\n`;
       else if (userData?.premiumUntil)
         statusText += `Expires <t:${Math.floor(userData.premiumUntil.getTime() / 1000)}:R>\n`;
@@ -298,11 +298,11 @@ module.exports = {
           `### ${emojis.feather} Feather Guild Premium Activated!\n` +
           `Your server **${targetGuild.name}** have been given **Feather Premium** for ${durationText}.\n\n` +
           `${emojis.blackdot} **Exclusive Server Perks:**\n` +
-          `› **24/7 Mode**\n` +
+          `**24/7 Mode**\n` +
           `Keep the bot in voice channels indefinitely.\n\n` +
-          `› **Unlimited Queue**\n` +
+          `**Unlimited Queue**\n` +
           `No restrictions on queue size for all members.\n\n` +
-          `› **Enhanced Filters**\n` +
+          `**Enhanced Filters**\n` +
           `Access 8D, Nightcore, and Vaporwave filters.\n` +
           `**Smart Autoplay** Intelligent song recommendations.\n\n` +
           `*${days > 0 ? `Expires: <t:${Math.floor(expiryDate.getTime() / 1000)}:R>` : "Duration: Lifetime Access"}*`;
@@ -346,7 +346,7 @@ module.exports = {
 
       const content =
         `${emojis.feather} **Feather Premium Activated**\n` +
-        `› ${emojis.blackdot} **Status:** Activated ✨\n` +
+        `${emojis.blackdot} **Status:** Activated ✨\n` +
         `**Server:** ${guildName}\n` +
         `**Duration:** ${durationText}\n` +
         `**Expires:** ${expiryText}`;
@@ -412,15 +412,15 @@ module.exports = {
             `### ${emojis.feather} Feather Premium Activated!\n` +
               `**You have been given Feather Premium** for ${durationText}. Enjoy your exclusive benefits:\n\n` +
               `${emojis.blackdot} **Exclusive Benefits:**\n` +
-              `› **No-Prefix**\n` +
+              `**No-Prefix**\n` +
               `Execute commands directly without the prefix.\n\n` +
-              `› **24/7 Mode**\n` +
+              `**24/7 Mode**\n` +
               `Maintain bot connection in voice channels indefinitely.\n\n` +
-              `› **Pro Audio Filters**\n` +
+              `**Pro Audio Filters**\n` +
               `Enhanced audio processing (8D, Nightcore, Vaporwave).\n\n` +
-              `› **Unlimited Access**\n` +
+              `**Unlimited Access**\n` +
               `No restrictions on queue size or liked songs.\n\n` +
-              `› **Smart Autoplay**\n` +
+              `**Smart Autoplay**\n` +
               `Receive intelligent song recommendations.\n\n` +
               `*Thank you for supporting Feather! Type \`/premium status\` to view your details.*`,
           ),
@@ -442,7 +442,7 @@ module.exports = {
 
       const content =
         `**${emojis.feather} Feather Premium Activated**\n` +
-        `› ${emojis.blackdot} ** Status:** Activated ✨\n` +
+        `${emojis.blackdot} ** Status:** Activated ✨\n` +
         `** User:** ${targetUser.username} \n` +
         `** Duration:** ${durationText} \n` +
         `** Expires:** ${expiryText} `;

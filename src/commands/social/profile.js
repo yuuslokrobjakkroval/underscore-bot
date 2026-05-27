@@ -118,7 +118,7 @@ module.exports = {
         const guildObj = isInteraction ? message.guild : message.guild;
         const member = guildObj.members.cache.get(targetUser.id);
         if (member && member.voice.channelId === player.voiceId) {
-          liveActivityText = `\n\n› **Live Activity**\n${emojis.vibe} Currently listening to **${player.queue.current.title.substring(0, 45)}**`;
+          liveActivityText = `\n\n**Live Activity**\n${emojis.vibe} Currently listening to **${player.queue.current.title.substring(0, 45)}**`;
         }
       }
 
@@ -146,18 +146,18 @@ module.exports = {
             `## ${emojis.feather} <@${targetUser.id}>'s Profile`,
           ),
           new TextDisplayBuilder().setContent(
-            `› **Account Tier**\n` +
+            `**Account Tier**\n` +
               `${tierText}\n\n` +
-              `› **Listener Level**\n` +
+              `**Listener Level**\n` +
               `${rankText}\n\n` +
-              `› **Library Statistics**\n` +
+              `**Library Statistics**\n` +
               `${emojis.file} **Playlists:** \` ${playlistCount} \` custom lists\n` +
               `${emojis.agHeart} **Favorites:** \` ${likedCount} \` saved songs\n` +
               `${emojis.hpBar} **History Size:** \` ${historyCount} \` tracks played\n\n` +
-              `› **Personal Music Charts**\n` +
+              `**Personal Music Charts**\n` +
               `${emojis.musicAnim} **Top Artist:** ${topArtistText}\n` +
               `${emojis.nowPlaying} **Favorite Song:** ${topSongText}\n\n` +
-              `› **Recent Listening History**\n` +
+              `**Recent Listening History**\n` +
               historyText +
               liveActivityText,
           ),

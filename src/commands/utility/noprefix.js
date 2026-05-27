@@ -83,7 +83,7 @@ module.exports = {
         : "";
       return createMsg(
         `**${emojis.feather} No-Prefix Status**\n` +
-          `› **User:** ${user.username}\n` +
+          `**User:** ${user.username}\n` +
           `**Status:** ${hasNP ? "Enabled ✨" : "Disabled"}${hasNP ? `\n**Expires:** ${expiry || "Never"}` : ""}`,
       );
     }
@@ -145,7 +145,7 @@ module.exports = {
           new TextDisplayBuilder().setContent(
             `### ${emojis.feather} No-Prefix Granted!\n` +
               `Your No-Prefix has been activated ${expiryText}.\n\n` +
-              `› **${emojis.search} How to use:**\n` +
+              `**${emojis.search} How to use:**\n` +
               `Just type the command directly (e.g., \`play\`, \`skip\`).\n` +
               `No need to use the prefix \`${client.config.prefix}\` anymore!\n` +
               `Works in all servers where the bot is present.`,
@@ -165,7 +165,7 @@ module.exports = {
       return createMsg(
         `*${emojis.feather} *No-Prefix Granted**\n` +
           `ㅤ\n` +
-          `› **User:** ${targetUser.username}\n` +
+          `**User:** ${targetUser.username}\n` +
           `**Status:** Activated\n` +
           `**Duration:** ${expiryText}`,
       );
@@ -183,7 +183,7 @@ module.exports = {
         const dmContainer = new ContainerBuilder().addTextDisplayComponents(
           new TextDisplayBuilder().setContent(
             `### ${emojis.error} No-Prefix Revoked\n` +
-              `› **Notification:**\n` +
+              `**Notification:**\n` +
               `Your No-Prefix has been removed.\n` +
               `You must now use the prefix \`${client.config.prefix}\` for all commands.`,
           ),
