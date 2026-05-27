@@ -38,13 +38,13 @@ module.exports = {
           new SectionBuilder()
             .addTextDisplayComponents(
               new TextDisplayBuilder().setContent(
-                `## ${emojis.vinyl} Now playing`,
+                `# ${emojis.vinyl} Now playing`,
               ),
-              new TextDisplayBuilder().setContent(`${shortTitle}`),
+              new TextDisplayBuilder().setContent(`## ${shortTitle}`),
               new TextDisplayBuilder().setContent(
                 `> - **Artist:** \`${author}\`\n` +
                   `> - **Duration:** \`${formatTime(total)}\`\n` +
-                  `> - **Requester:** <@${requester.id}>`,
+                  `> - **Requester:** \`${requester.displayName ?? requester.username ?? "Unknown"}\``,
               ),
             )
             .setThumbnailAccessory(new ThumbnailBuilder().setURL(thumb)),
