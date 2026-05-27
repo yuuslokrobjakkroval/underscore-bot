@@ -24,8 +24,27 @@ module.exports = {
             }
         }
 
-        // If no autoplay or fallback failed
         const channel = client.channels.cache.get(player.textId);
+
+        if (player.data.twentyFourSeven) {
+            logger.info(`Player kept alive in ${player.guildId} (24/7 mode)`);
+
+            if (channel) {
+                const stayMsg = new ContainerBuilder().addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`> ${emojis.vinyl} **Queue Finished.** Staying connected because 24/7 mode is enabled.`)
+                );
+                channel.send({
+                    components: [stayMsg.toJSON()],
+                    flags: MessageFlags.IsComponentsV2
+                }).then(msg => {
+                    setTimeout(() => msg.delete().catch(() => { }), 10000);
+                }).catch(() => { });
+            }
+
+            return;
+        }
+
+        // If no autoplay or fallback failed
         if (channel) {
             const endMsg = new ContainerBuilder().addTextDisplayComponents(
                 new TextDisplayBuilder().setContent(`> ${emojis.blacklist} **Queue Finished.** Disconnecting soon due to inactivity.`)
@@ -39,7 +58,7 @@ module.exports = {
         }
 
         // Auto-destroy player after 30 seconds of inactivity
-        setTimeout(() => {
+        player.data.leaveTimeout = setTimeout(() => {
             if (!player.playing && player.queue.length === 0) {
                 player.destroy();
                 logger.info(`Player destroyed in ${player.guildId} (Inactivity)`);
