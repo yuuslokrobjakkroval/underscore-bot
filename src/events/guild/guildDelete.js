@@ -26,7 +26,6 @@ function buildGlobalLogEmbed(client, guild) {
       `## ${emojis.error} Guild Removed\n` +
         `> **Name:** ${guild.name ?? "Unknown"}\n` +
         `> **ID:** \`${guild.id}\`\n` +
-        `> **Owner:** ${guild.ownerId ? `<@${guild.ownerId}> (\`${guild.ownerId}\`)` : "Unknown"}\n` +
         `> **Members:** ${guild.memberCount?.toLocaleString() ?? "Unknown"}\n` +
         `> **Left on:** ${leftAt}\n` +
         `> **Total Servers:** ${client.guilds.cache.size.toLocaleString()}`,

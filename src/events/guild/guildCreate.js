@@ -76,7 +76,6 @@ function buildGlobalLogEmbed(client, guild, type) {
       `## ${icon} ${label}\n` +
         `> **Name:** ${guild.name ?? "Unknown"}\n` +
         `> **ID:** \`${guild.id}\`\n` +
-        `> **Owner:** ${guild.ownerId ? `<@${guild.ownerId}> (\`${guild.ownerId}\`)` : "Unknown"}\n` +
         `> **Members:** ${guild.memberCount?.toLocaleString() ?? "Unknown"}\n` +
         `> **Total Servers:** ${client.guilds.cache.size.toLocaleString()}`,
     ),
