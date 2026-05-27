@@ -4,57 +4,61 @@
  */
 const emojis = {
   // ── Player Controls ──────────────────────────────────────────────────────
-  backward: "<a:backwardsParrot:1508854537522384931> ",
-  play: "<:icons_play:1500920780312285386>",
-  pause: "<:pause:1500921090187202761>",
-  stop: "<:stop:1500921641826258958>",
-  forward: "<:e_blackforward:1500921177613537362>",
-  loop: "<:black_update:1500921989248979115>",
-  shuffle: "<:shuffle:1500931193300844795>",
-  volume: "<:Black_Volume:1500931980014129225>",
-  vinyl: "<a:black_vinyl:1500920467379191990>", // animated spinning vinyl
+  backward: "<:backward02strokerounded:1509086504536899694>",
+  play: "<:playstrokerounded:1509086493396963479>",
+  pause: "<:pausestrokerounded:1509086496265605330>",
+  stop: "<:stopstrokerounded:1509086501601021952>",
+  forward: "<:fastforwardstrokerounded:1509086507955126422>",
+  loop: "<:repeatstrokerounded:1509086526221324428>",
+  shuffle: "<:shufflesquarestrokerounded:1509086516960301056>",
+  volume: "<:volumehighstrokerounded:1509086519241998487>",
+  vinyl: "<:vynil01strokerounded:1509086523935559772>", // animated spinning vinyl
 
   // ── Status / Feedback ────────────────────────────────────────────────────
-  check: "<:check_black:1500924675511812208>",
-  error: "<:wrong:1500917527918678147>",
-  blacklist: "<:blacklist:1500921270378959000>",
-  delete: "<:Delete:1500925771437314099>",
+  check: "<:checkstrokerounded:1509089548129275924>",
+  error: "<:cancel01strokerounded:1509092366718603405>",
+  blacklist: "<:listxstrokerounded:1509089544220315719>",
+  delete: "<:delete02strokerounded:1509089541955387575>",
 
   // ── Branding / Navigation ────────────────────────────────────────────────
   feather: "<a:peachy:1459255820431921387>",
-  music: "<:music:1500923048646152284>",
-  navigation: "<:icons_navigation:1500937486107410542>",
-  search: "<:search:1500924349878632509>",
-  lyrics: "<:lyrics:1500943407827128372>",
+  music: "<:music3strokerounded:1509089551782772797>",
+  navigation: "<:globestrokerounded:1509089539694530731>",
+  search: "<:search02strokerounded:1509089561291128943>",
+  lyrics: "<:bookopentextstrokerounded:1509089558761963540>",
 
   // ── Admin / Config ───────────────────────────────────────────────────────
-  admin: "<:admin:1500924079857864724>",
-  config: "<:black_config:1500924211437371602>",
+  admin: "<:managerstrokerounded:1509091073161691287>",
+  config: "<:settings01strokerounded:1509091076038856765>",
 
   // ── Stats (three distinct emoji IDs) ────────────────────────────────────
-  statsDev: "<:stats:1500932574539944039>", // developer tier badge in /profile
-  statsBot: "<:stats:1500932679275909224>", // bot info header in /stats
-  statsSec: "<:stats:1500933201433067520>", // statistics section header in /stats
+  statsDev: "<:developerstrokerounded:1509091078593056830>", // developer tier badge in /profile
+  statsBot: "<:botstrokerounded:1509091080828747938>", // bot info header in /stats
+  statsSec: "<:batterycharging01strokerounded:1509091082875699291>", // statistics section header in /stats
 
   // ── Social / Profile ─────────────────────────────────────────────────────
-  heart: "<a:r_heart_black_1:1500923805244063786>",
-  file: "<:file:1505918548977909851>",
-  agHeart: "<:ag_black_heart:1505919003774816417>",
-  hpBar: "<a:hs_blackhp:1505919340158128288>",
-  musicAnim: "<a:music:1505920391519010977>", // animated music note (different from static)
-  nowPlaying: "<a:hizumi_playing:1500920010300719124>",
-  vibe: "<a:vibe:1505923405420167178>",
+  heart: "<:heartstrokerounded:1509091084960268410>",
+  file: "<:file01strokerounded:1509091087388770324>",
+  agHeart: "<:heartpulsestrokerounded:1509091090354147448>",
+  hpBar: "<:analytics01strokerounded:1509091092677787659>",
+  musicAnim: "<:audiobook02strokerounded:1509091094938259517>", // animated music note (different from static)
+  nowPlaying: "<a:MOONPHASES:1506322683355467806>",
+  vibe: "<:viberstrokerounded:1509091114974445618>",
 
   // ── Animated / Effects ───────────────────────────────────────────────────
-  thunder: "<a:Black_Thunder:1500932956632383548>",
-  blackdot: "<a:blackdot:1500917796140351578>",
-  rebooting: "<a:black_update:1500921989248979115>", // animated loop used in reboot text
+  thunder: "<:jupiterstrokerounded:1509091116996235314>",
+  blackdot: "<:dotstrokerounded:1509091119533785098>",
+  rebooting: "<:startup01strokerounded:1509091070670274730>", // animated loop used in reboot text
 
   // ── Ranks ────────────────────────────────────────────────────────────────
-  rankBronze: "<:Bronze:1505922764551360632>",
-  rankSilver: "<:silver:1505922786785230878>",
-  rankGold: "<:GoldRank:1505922805567455363>",
-  rankDiamond: "<:diamond_rank:1505922821304352819>",
+  rank: {
+    bronze: "<:BRONZE:1509056843190636634>",
+    silver: "<:SILVER:1509056845258424372>",
+    gold: "<:GOLD:1509056847770812588>",
+    diamond: "<:DIAMOND:1509056838686085250>",
+    platinum: "<:PLATINUM:1509056850174279792>",
+    champion: "<:CHAMPION:1509056840745484450>",
+  },
 };
 
 module.exports = emojis;

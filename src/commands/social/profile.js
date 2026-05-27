@@ -103,13 +103,19 @@ module.exports = {
       const historyCount = userData.history?.length || 0;
 
       // 6. Calculate Listener Level Rank
-      let rankText = `${emojis.rankBronze} **Bronze Ear**`;
-      if (historyCount > 100)
-        rankText = `${emojis.rankDiamond} **Diamond Maestro**`;
+      let rankText = `${emojis.rank.bronze} **Bronze Ear**`;
+      if (historyCount > 500)
+        rankText = `${emojis.rank.champion} **Champion Legend**`;
+      else if (historyCount > 200)
+        rankText = `${emojis.rank.platinum} **Platinum Virtuoso**`;
+      else if (historyCount > 100)
+        rankText = `${emojis.rank.diamond} **Diamond Maestro**`;
       else if (historyCount > 50)
-        rankText = `${emojis.rankGold} **Gold Audiophile**`;
+        rankText = `${emojis.rank.gold} **Gold Audiophile**`;
       else if (historyCount > 15)
-        rankText = `${emojis.rankSilver} **Silver Groover**`;
+        rankText = `${emojis.rank.silver} **Silver Groover**`;
+      else if (historyCount > 8)
+        rankText = `${emojis.rank.bronze} **Bronze Ear**`;
 
       // 7. Dynamic VC Now Playing Activity Status
       let liveActivityText = "";
