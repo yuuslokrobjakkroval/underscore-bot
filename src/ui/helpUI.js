@@ -22,7 +22,7 @@ module.exports = {
       .addSectionComponents(
         new SectionBuilder()
           .addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(`## Hey! I'm **Feather**`),
+            new TextDisplayBuilder().setContent(`## Hey! I'm **Pookie**`),
             new TextDisplayBuilder().setContent(
               `> - **Your personal high-fidelity music system**\n\n` +
                 `> **${emojis.music} Quick Start**\n` +
@@ -67,7 +67,7 @@ module.exports = {
         new SectionBuilder()
           .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-              `## ${emojis.feather} Feather Help Menu`,
+              `## ${emojis.feather} Help Menu`,
             ),
             new TextDisplayBuilder().setContent(
               `ㅤ\n` +
