@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const logger = require('../utils/logger');
+const BotAssignment = require('./models/botAssignment');
 
 
 module.exports = async () => {
@@ -8,6 +9,7 @@ module.exports = async () => {
             serverSelectionTimeoutMS: 5000,
             autoIndex: false,
         });
+        await BotAssignment.createIndexes();
         logger.info('Connected to MongoDB');
     } catch (error) {
         logger.error(`MongoDB connection error: ${error.message}`);

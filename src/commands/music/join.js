@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, ContainerBuilder, SectionBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const emojis = require('../../utils/emojis');
+const { resolveMusicBot } = require('../../utils/botCoordinator');
 
 module.exports = {
     name: 'join',
@@ -20,6 +21,12 @@ module.exports = {
         };
 
         if (!vc) return message.reply(createResponse('You need to be in a voice channel.', true));
+
+        const botCheck = await resolveMusicBot(client, message);
+        if (!botCheck.allowed) {
+            if (botCheck.silent) return null;
+            return message.reply(createResponse(botCheck.reason, true));
+        }
 
         let player = client.manager.players.get(message.guild.id);
         if (player) return message.reply(createResponse('I am already in a voice channel.', true));

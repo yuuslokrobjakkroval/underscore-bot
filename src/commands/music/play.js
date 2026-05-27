@@ -15,6 +15,7 @@ const resolver = require('../../utils/resolver');
 const { formatTime } = require('../../utils/formatters');
 const logger = require('../../utils/logger');
 const emojis = require('../../utils/emojis');
+const { resolveMusicBot } = require('../../utils/botCoordinator');
 
 module.exports = {
     name: 'play',
@@ -45,6 +46,12 @@ module.exports = {
 
         const vc = member.voice.channel;
         if (!vc) return message.reply(createError('You need to be in a voice channel first.'));
+
+        const botCheck = await resolveMusicBot(client, message);
+        if (!botCheck.allowed) {
+            if (botCheck.silent) return null;
+            return message.reply(createError(botCheck.reason));
+        }
 
         if (!message.guild.members.me.permissionsIn(vc).has([PermissionFlagsBits.Connect, PermissionFlagsBits.Speak])) {
             return message.reply(createError("I don't have permissions to join or speak in your channel."));

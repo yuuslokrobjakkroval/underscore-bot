@@ -40,6 +40,9 @@ GUILD_ID=your_test_guild_id
 OWNER_ID=your_discord_user_id
 PREFIX=.
 
+# Multi-bot family coordination
+MUSIC_BOT_IDS=bot_id_1,bot_id_2,bot_id_3,bot_id_4,bot_id_5,bot_id_6
+
 # Lavalink
 LAVALINK_NAME=pookie
 LAVALINK_HOST=localhost
@@ -168,6 +171,7 @@ src/
 - Global slash command deployment can take time to appear in Discord.
 - Lavalink must be online before music playback can work.
 - The bot uses MongoDB for user history, playlists, guild settings, premium state, and profile data.
+- If you run multiple copies with the same prefix, set `MUSIC_BOT_IDS` on every bot so only one bot claims a voice channel for `play` and `join`.
 
 ## Recommended Next Improvements
 
