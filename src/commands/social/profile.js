@@ -17,7 +17,7 @@ const emojis = require("../../utils/emojis");
 
 // Paste your custom medium-resolution profile banner URL here!
 const PROFILE_BANNER_URL =
-  "https://cdn.discordapp.com/attachments/1500760681488584716/1505917569583026196/feather.png?ex=6a0c5e87&is=6a0b0d07&hm=44aba3dcca17b60124c55e829acad26195da651f8e45a40a358a31169171ef66&";
+  "https://ik.imagekit.io/peachy/peachy/b309cb526217f867222a1a60f0237705.png?updatedAt=1779811768717";
 
 module.exports = {
   name: "profile",
