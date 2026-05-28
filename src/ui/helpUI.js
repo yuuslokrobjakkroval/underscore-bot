@@ -22,7 +22,9 @@ module.exports = {
       .addSectionComponents(
         new SectionBuilder()
           .addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(`## Hey! I'm **Pookie**`),
+            new TextDisplayBuilder().setContent(
+              `## Hey! I'm **${client.user.username}**`,
+            ),
             new TextDisplayBuilder().setContent(
               `> - **Your personal high-fidelity music system**\n\n` +
                 `> **${emojis.music} Quick Start**\n` +
