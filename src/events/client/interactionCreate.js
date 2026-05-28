@@ -5,6 +5,7 @@ const {
   MessageFlags,
 } = require("discord.js");
 const emojis = require("../../utils/emojis");
+const { isOwner, isPrivate } = require("../../utils/botAccess");
 
 const createErrorMsg = (text) => ({
   content: null,
@@ -23,6 +24,22 @@ const createErrorMsg = (text) => ({
 module.exports = {
   name: "interactionCreate",
   async execute(client, interaction) {
+    if (isPrivate(client) && !isOwner(client, interaction.user.id)) {
+      return interaction.reply({
+        components: [
+          new ContainerBuilder()
+            .addTextDisplayComponents(
+              new TextDisplayBuilder().setContent(
+                `> ${emojis.error} This bot is currently **private**. Only bot owners can use commands.`,
+              ),
+            )
+            .toJSON(),
+        ],
+        flags: MessageFlags.IsComponentsV2,
+        ephemeral: true,
+      }).catch(() => {});
+    }
+
     if (interaction.isChatInputCommand()) {
       const command = client.commands.get(interaction.commandName);
       if (!command) return;
@@ -33,7 +50,7 @@ module.exports = {
         const User = require("../../database/models/user");
         const guildData = await Guild.findOne({ guildId: interaction.guildId });
         const userData = await User.findOne({ userId: interaction.user.id });
-        const isOwner = client.config.owners.includes(interaction.user.id);
+        const userIsOwner = isOwner(client, interaction.user.id);
 
         const isGuildPremium =
           guildData?.premium &&
@@ -41,7 +58,7 @@ module.exports = {
         const isUserPremium =
           (userData?.premium &&
             (!userData.premiumUntil || userData.premiumUntil > Date.now())) ||
-          isOwner;
+          userIsOwner;
 
         if (!isGuildPremium && !isUserPremium) {
           return interaction.reply({

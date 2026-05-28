@@ -7,6 +7,7 @@ const db = require('../utils/database');
 const config = require('../config/bot');
 const nodes = require('../config/lavalink');
 const spotifyConfig = require('../config/spotify');
+const { syncClientAccess } = require('../utils/botAccess');
 const path = require('path');
 const fs = require('fs');
 
@@ -62,6 +63,7 @@ class FeatherClient extends Client {
 
     async start() {
         await require('../database/connection')();
+        await syncClientAccess(this);
         await this.initHandlers(); // Load commands and deploy slash commands
         await this.login(this.config.token);
     }

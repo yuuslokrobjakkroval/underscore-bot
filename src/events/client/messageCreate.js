@@ -2,6 +2,8 @@ const User = require('../../database/models/user');
 const helpUI = require('../../ui/helpUI');
 const emojis = require('../../utils/emojis');
 const { resolveCommandBot } = require('../../utils/botCoordinator');
+const { isOwner, isPrivate } = require('../../utils/botAccess');
+const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const noPrefixCache = new Map();
 
 const event = {
@@ -12,6 +14,14 @@ const event = {
         // Mention Response & Prefix Logic
         const mentionRegex = new RegExp(`^<@!?${client.user.id}>`);
         const mentionMatch = message.content.match(mentionRegex);
+        const prefix = client.config.prefix;
+
+        if (isPrivate(client) && !isOwner(client, message.author.id) && (mentionMatch || message.content.startsWith(prefix))) {
+            const container = new ContainerBuilder().addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`> ${emojis.error} This bot is currently **private**. Only bot owners can use commands.`)
+            );
+            return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 }).catch(() => { });
+        }
 
         if (mentionMatch) {
             // If it's ONLY a mention, show help
@@ -21,7 +31,6 @@ const event = {
             }
         }
 
-        const prefix = client.config.prefix;
         let commandName = '';
         let args = [];
         let isDirectMention = false;
@@ -40,10 +49,10 @@ const event = {
 
             if (hasNoPrefix === undefined) {
                 const userData = await User.findOne({ userId: message.author.id });
-                const isOwner = client.config.owners.includes(message.author.id);
+                const authorIsOwner = isOwner(client, message.author.id);
                 const isPremiumUser = userData?.premium && (!userData.premiumUntil || userData.premiumUntil > Date.now());
 
-                if (isOwner) {
+                if (authorIsOwner) {
                     hasNoPrefix = userData?.noPrefix || false;
                 } else {
                     hasNoPrefix = isPremiumUser || userData?.noPrefix || false;
@@ -53,7 +62,7 @@ const event = {
                     userData.noPrefix = false;
                     userData.noPrefixUntil = null;
                     await userData.save();
-                    if (!isPremiumUser && !isOwner) hasNoPrefix = false;
+                    if (!isPremiumUser && !authorIsOwner) hasNoPrefix = false;
                 }
 
                 noPrefixCache.set(message.author.id, hasNoPrefix);
@@ -79,6 +88,13 @@ const event = {
         const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
         if (!command) return;
 
+        if (isPrivate(client) && !isOwner(client, message.author.id)) {
+            const container = new ContainerBuilder().addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`> ${emojis.error} This bot is currently **private**. Only bot owners can use commands.`)
+            );
+            return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 }).catch(() => { });
+        }
+
         const botCheck = await resolveCommandBot(client, message, { command, isDirectMention });
         if (!botCheck.allowed) {
             if (botCheck.silent) return;
@@ -91,9 +107,9 @@ const event = {
             const guildData = await Guild.findOne({ guildId: message.guild.id });
             const userData = await User.findOne({ userId: message.author.id });
 
-            const isOwner = client.config.owners.includes(message.author.id);
+            const authorIsOwner = isOwner(client, message.author.id);
             const isGuildPremium = guildData?.premium && (!guildData.premiumUntil || guildData.premiumUntil > Date.now());
-            const isUserPremium = (userData?.premium && (!userData.premiumUntil || userData.premiumUntil > Date.now())) || isOwner;
+            const isUserPremium = (userData?.premium && (!userData.premiumUntil || userData.premiumUntil > Date.now())) || authorIsOwner;
 
             if (!isGuildPremium && !isUserPremium) {
                 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
