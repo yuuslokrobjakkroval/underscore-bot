@@ -25,9 +25,16 @@ async function getSettings(seedOwners = []) {
 }
 
 async function syncClientAccess(client) {
-  const fallbackOwners = normalizeOwners(client.config.owners);
-  const settings = await getSettings(fallbackOwners);
-  client.config.owners = normalizeOwners(settings.owners.length ? settings.owners : fallbackOwners);
+  const envOwners = normalizeOwners(client.config.envOwners || client.config.owners);
+  const settings = await getSettings(envOwners);
+  const mergedOwners = normalizeOwners([...envOwners, ...(settings.owners || [])]);
+
+  if (mergedOwners.length !== normalizeOwners(settings.owners).length) {
+    settings.owners = mergedOwners;
+    await settings.save();
+  }
+
+  client.config.owners = mergedOwners;
   client.config.botMode = settings.mode;
   return settings;
 }
@@ -45,7 +52,7 @@ async function setMode(client, mode) {
     throw new Error(`Invalid bot mode: ${mode}`);
   }
 
-  const settings = await getSettings(client.config.owners);
+  const settings = await getSettings(client.config.envOwners || client.config.owners);
   settings.mode = mode;
   await settings.save();
   await syncClientAccess(client);
@@ -53,7 +60,7 @@ async function setMode(client, mode) {
 }
 
 async function addOwner(client, userId) {
-  const settings = await getSettings(client.config.owners);
+  const settings = await getSettings(client.config.envOwners || client.config.owners);
   const owners = normalizeOwners([...settings.owners, userId]);
   settings.owners = owners;
   await settings.save();
@@ -63,7 +70,12 @@ async function addOwner(client, userId) {
 
 async function removeOwner(client, userId) {
   const targetId = String(userId);
-  const settings = await getSettings(client.config.owners);
+  const envOwners = normalizeOwners(client.config.envOwners || []);
+  if (envOwners.includes(targetId)) {
+    throw new Error("Owners from OWNER_ID cannot be removed with this command.");
+  }
+
+  const settings = await getSettings(envOwners.length ? envOwners : client.config.owners);
   const owners = normalizeOwners(settings.owners).filter((id) => id !== targetId);
 
   if (owners.length === normalizeOwners(settings.owners).length) {

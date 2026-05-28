@@ -160,7 +160,13 @@ module.exports = {
         return createMsg("Please mention a user or provide a user ID.", true);
       }
 
-      const result = await removeOwner(client, targetId);
+      let result;
+      try {
+        result = await removeOwner(client, targetId);
+      } catch (error) {
+        return createMsg(error.message, true);
+      }
+
       if (!result.removed) {
         return createMsg("That user is not currently a bot owner.", true);
       }
