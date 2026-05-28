@@ -24,6 +24,8 @@ const GuildSchema = new mongoose.Schema(
       musicChannel: { type: String, default: null }, // Restrict music cmds to this channel
       language: { type: String, default: "en" },
       defaultVolume: { type: Number, default: 100, min: 0, max: 200 },
+      botNicknameLocked: { type: Boolean, default: false },
+      botNickname: { type: String, default: null },
     },
 
     // ── Music Features ────────────────────────────────────────────────────
