@@ -52,7 +52,7 @@ async function claimVoiceChannel(client, voiceChannel) {
             },
             {
                 upsert: true,
-                new: true,
+                returnDocument: 'after',
             },
         );
 
