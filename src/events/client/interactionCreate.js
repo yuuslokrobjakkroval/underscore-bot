@@ -5,6 +5,8 @@ const {
   MessageFlags,
 } = require("discord.js");
 const emojis = require("../../utils/emojis");
+const { isOwner, isPrivate } = require("../../utils/botAccess");
+const { logSlashCommand } = require("../../utils/commandUsageLogger");
 
 const createErrorMsg = (text) => ({
   content: null,

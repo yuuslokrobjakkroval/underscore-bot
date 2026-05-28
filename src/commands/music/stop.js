@@ -1,7 +1,6 @@
 const {
   SlashCommandBuilder,
   ContainerBuilder,
-  SectionBuilder,
   TextDisplayBuilder,
   MessageFlags,
 } = require("discord.js");
@@ -23,11 +22,9 @@ module.exports = {
       const player = client.manager.players.get(guildId);
 
       const createResponse = (text, isError = false) => {
-        const container = new ContainerBuilder().addSectionComponents(
-          new SectionBuilder().addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-              `${isError ? `> ${emojis.error} ` : `> ${emojis.check} `}${text}`,
-            ),
+        const container = new ContainerBuilder().addTextDisplayComponents(
+          new TextDisplayBuilder().setContent(
+            `${isError ? `> ${emojis.error} ` : `> ${emojis.check} `}${text}`,
           ),
         );
         return {

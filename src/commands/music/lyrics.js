@@ -34,12 +34,9 @@ module.exports = {
             const title = player?.queue.current?.title || query;
 
             const container = new ContainerBuilder()
-                .addSectionComponents(
-                    new SectionBuilder()
-                        .addTextDisplayComponents(
-                            new TextDisplayBuilder().setContent(`## ${emojis.lyrics} Lyrics: ${title.substring(0, 50)}`),
-                            new TextDisplayBuilder().setContent(lyrics.length > 3000 ? lyrics.substring(0, 3000) + '...' : lyrics)
-                        )
+                .addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`## ${emojis.lyrics} Lyrics: ${title.substring(0, 50)}`),
+                    new TextDisplayBuilder().setContent(lyrics.length > 3000 ? lyrics.substring(0, 3000) + '...' : lyrics)
                 )
                 .addSeparatorComponents(new SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small));
 

@@ -194,8 +194,8 @@ module.exports = {
                 // Add all to queue immediately
                 tracks.forEach(t => player.queue.add(t));
                 
-                const success = new ContainerBuilder().addSectionComponents(
-                    new SectionBuilder().addTextDisplayComponents(new TextDisplayBuilder().setContent(`${emojis.check} Added all **${tracks.length}** results to queue.`))
+                const success = new ContainerBuilder().addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`${emojis.check} Added all **${tracks.length}** results to queue.`)
                 );
                 
                 await i.reply({ components: [success.toJSON()], flags: MessageFlags.Ephemeral | MessageFlags.IsComponentsV2 });

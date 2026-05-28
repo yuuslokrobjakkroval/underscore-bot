@@ -125,12 +125,9 @@ module.exports = {
 
         const successContainer = new ContainerBuilder();
         if (isPlaylist) {
-            successContainer.addSectionComponents(
-                new SectionBuilder()
-                    .addTextDisplayComponents(
-                        new TextDisplayBuilder().setContent(`### ${emojis.check} Playlist Added`),
-                        new TextDisplayBuilder().setContent(`> [**${result.playlistName}**](${query}) with \`${tracks.length}\` tracks\n> -# Queued by \` ${user.username} \``)
-                    )
+            successContainer.addTextDisplayComponents(
+                new TextDisplayBuilder().setContent(`### ${emojis.check} Playlist Added`),
+                new TextDisplayBuilder().setContent(`> [**${result.playlistName}**](${query}) with \`${tracks.length}\` tracks\n> -# Queued by \` ${user.username} \``)
             );
         } else {
             const track = tracks[0];
@@ -146,7 +143,17 @@ module.exports = {
             
             const thumb = metadata.getHighResThumbnail(track.thumbnail);
             if (thumb) section.setThumbnailAccessory(new ThumbnailBuilder().setURL(thumb));
-            successContainer.addSectionComponents(section);
+            if (thumb) {
+                successContainer.addSectionComponents(section);
+            } else {
+                successContainer.addTextDisplayComponents(
+                    new TextDisplayBuilder().setContent(`### ${emojis.check} Track Added`),
+                    new TextDisplayBuilder().setContent(
+                        `> [**${metadata.truncate(track.title, 35)}**](${track.uri}) by \` ${metadata.cleanAuthor(track.author)} \`\n` +
+                        `> -# Position \` #${position} \` Â· Duration \` ${formatTime(track.length)} \` Â· By \` ${user.username} \``
+                    )
+                );
+            }
 
             if (position > 0) {
                 successContainer.addActionRowComponents(

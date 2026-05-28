@@ -19,20 +19,34 @@ for (const folder of commandFolders) {
     }
 }
 
-const rest = new REST().setToken(process.env.TOKEN);
-
 (async () => {
+    if (!process.env.TOKEN || !process.env.CLIENT_ID) {
+        console.warn('Deploy skipped: TOKEN or CLIENT_ID is missing.');
+        return;
+    }
+
+    const rest = new REST().setToken(process.env.TOKEN);
+    const guildId = process.env.GUILD_ID;
+
     try {
         console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-        const route = process.env.GUILD_ID
-            ? Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID)
+        const route = guildId
+            ? Routes.applicationGuildCommands(process.env.CLIENT_ID, guildId)
             : Routes.applicationCommands(process.env.CLIENT_ID);
 
         const data = await rest.put(route, { body: commands });
 
-        console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+        console.log(`Successfully reloaded ${data.length} ${guildId ? `guild (${guildId})` : 'global'} application (/) commands.`);
     } catch (error) {
+        if (error.code === 50001 && guildId) {
+            console.warn(
+                `Missing access to guild ${guildId}. ` +
+                'Make sure GUILD_ID is correct and the bot is invited there with the applications.commands scope, or remove GUILD_ID to deploy globally.'
+            );
+            return;
+        }
+
         console.error(error);
     }
 })();
