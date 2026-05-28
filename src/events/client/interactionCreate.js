@@ -5,6 +5,7 @@ const {
   MessageFlags,
 } = require("discord.js");
 const emojis = require("../../utils/emojis");
+const { logSlashCommand } = require("../../utils/commandUsageLogger");
 
 const createErrorMsg = (text) => ({
   content: null,
@@ -59,6 +60,10 @@ module.exports = {
           });
         }
       }
+
+      logSlashCommand(client, interaction, command).catch((error) => {
+        logger.warn(`Failed to send command usage log: ${error.message}`);
+      });
 
       try {
         const response = await command.execute(client, interaction);
