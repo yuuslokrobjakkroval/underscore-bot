@@ -1,14 +1,10 @@
 const {
   SlashCommandBuilder,
-  ContainerBuilder,
-  TextDisplayBuilder,
-  MessageFlags,
+  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  SectionBuilder,
-  ThumbnailBuilder,
-  PermissionFlagsBits,
+  MessageFlags,
 } = require("discord.js");
 
 module.exports = {
@@ -40,21 +36,31 @@ module.exports = {
 
     const guildsPerPage = 10;
     const totalPages = Math.ceil(guilds.length / guildsPerPage);
-    let currentPage = 1;
 
     const createPage = (page) => {
       const start = (page - 1) * guildsPerPage;
       const end = start + guildsPerPage;
       const pageGuilds = guilds.slice(start, end);
 
-      const guildList = pageGuilds
-        .map((g, idx) => {
-          const createdAt = Math.floor(g.createdTimestamp / 1000);
-          return `**${start + idx + 1}.** ${g.name} | \`${g.memberCount}\` members | <t:${createdAt}:R>`;
-        })
-        .join("\n");
+      const embed = new EmbedBuilder()
+        .setTitle("🏢 Guild List")
+        .setColor("#5865F2")
+        .setFooter({
+          text: `Page ${page}/${totalPages} • Total: ${guilds.length} guilds`,
+        });
 
-      const content = `### 🏢 Guild List\nPage \`${page}/${totalPages}\` (Total: \`${guilds.length}\` guilds)\n\n${guildList}`;
+      pageGuilds.forEach((g, idx) => {
+        const createdAt = Math.floor(g.createdTimestamp / 1000);
+        embed.addFields({
+          name: `${start + idx + 1}. ${g.name}`,
+          value:
+            `ID: \`${g.id}\`\n` +
+            `Members: \`${g.memberCount}\`\n` +
+            `Owner: \`${g.ownerId}\`\n` +
+            `Created: <t:${createdAt}:R>`,
+          inline: false,
+        });
+      });
 
       const buttons = new ActionRowBuilder();
       if (page > 1) {
@@ -84,13 +90,13 @@ module.exports = {
       }
 
       return {
-        content: content,
+        embeds: [embed],
         components: [buttons],
       };
     };
 
     return isInteraction
-      ? message.reply(createPage(currentPage))
-      : message.reply(createPage(currentPage));
+      ? message.reply(createPage(1))
+      : message.reply(createPage(1));
   },
 };
