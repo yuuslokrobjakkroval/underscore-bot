@@ -1,13 +1,10 @@
 const {
   SlashCommandBuilder,
-  ContainerBuilder,
-  TextDisplayBuilder,
-  MessageFlags,
+  EmbedBuilder,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  SectionBuilder,
-  ThumbnailBuilder,
+  MessageFlags,
 } = require("discord.js");
 
 module.exports = {
@@ -23,21 +20,20 @@ module.exports = {
         .setRequired(true),
     ),
 
-  async execute(client, message) {
-    const isInteraction = !!message.options;
-    const user = isInteraction ? message.user : message.author;
-
+  async execute(client, interaction) {
+    const user = interaction.user;
     const isDeveloper = client.config.owners.includes(user.id);
+
     if (!isDeveloper) {
-      return message.reply({
+      return interaction.reply({
         content: "❌ This command is developer-only.",
         flags: MessageFlags.Ephemeral,
       });
     }
 
-    const guildId = isInteraction ? message.options.getString("guildid") : null;
+    const guildId = interaction.options.getString("guildid");
     if (!guildId) {
-      return message.reply({
+      return interaction.reply({
         content: "❌ Guild ID is required.",
         flags: MessageFlags.Ephemeral,
       });
@@ -45,7 +41,7 @@ module.exports = {
 
     const targetGuild = client.guilds.cache.get(guildId);
     if (!targetGuild) {
-      return message.reply({
+      return interaction.reply({
         content: `❌ Guild with ID \`${guildId}\` not found.`,
         flags: MessageFlags.Ephemeral,
       });
@@ -54,26 +50,45 @@ module.exports = {
     const createdAt = Math.floor(targetGuild.createdTimestamp / 1000);
     const owner = await targetGuild.fetchOwner().catch(() => null);
 
-    const container = new ContainerBuilder();
-    const section = new SectionBuilder().addTextDisplayComponents(
-      new TextDisplayBuilder().setContent(`### ⚠️ Leave Guild Confirmation`),
-      new TextDisplayBuilder().setContent(
-        `**Guild Name:** ${targetGuild.name}\n` +
-          `**Guild ID:** \`${targetGuild.id}\`\n` +
-          `**Members:** \`${targetGuild.memberCount}\`\n` +
-          `**Owner:** ${owner ? `\`${owner.user.username}\`` : "`Unknown`"}\n` +
-          `**Created:** <t:${createdAt}:R>\n\n` +
-          `Are you sure you want to leave this guild?`,
-      ),
-    );
+    const embed = new EmbedBuilder()
+      .setTitle("⚠️ Leave Guild Confirmation")
+      .setColor("#FF0000")
+      .addFields(
+        {
+          name: "Guild Name",
+          value: targetGuild.name,
+          inline: true,
+        },
+        {
+          name: "Guild ID",
+          value: `\`${targetGuild.id}\``,
+          inline: true,
+        },
+        {
+          name: "Members",
+          value: `\`${targetGuild.memberCount}\``,
+          inline: true,
+        },
+        {
+          name: "Owner",
+          value: owner ? `\`${owner.user.username}\`` : "`Unknown`",
+          inline: true,
+        },
+        {
+          name: "Created",
+          value: `<t:${createdAt}:R>`,
+          inline: true,
+        },
+        {
+          name: "Action",
+          value: "Are you sure you want to leave this guild?",
+          inline: false,
+        },
+      );
 
     if (targetGuild.icon) {
-      section.setThumbnailAccessory(
-        new ThumbnailBuilder().setURL(targetGuild.iconURL({ size: 512 })),
-      );
+      embed.setThumbnail(targetGuild.iconURL({ size: 512 }));
     }
-
-    container.addSectionComponents(section);
 
     const buttons = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -86,14 +101,10 @@ module.exports = {
         .setStyle(ButtonStyle.Secondary),
     );
 
-    return isInteraction
-      ? message.reply({
-          components: [container.toJSON(), buttons.toJSON()],
-          flags: MessageFlags.IsComponentsV2,
-        })
-      : message.reply({
-          components: [container.toJSON(), buttons.toJSON()],
-          flags: MessageFlags.IsComponentsV2,
-        });
+    return interaction.reply({
+      embeds: [embed],
+      components: [buttons],
+      flags: MessageFlags.Ephemeral,
+    });
   },
 };
