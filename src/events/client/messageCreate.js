@@ -4,6 +4,7 @@ const emojis = require('../../utils/emojis');
 const { resolveCommandBot } = require('../../utils/botCoordinator');
 const { isOwner, isPrivate } = require('../../utils/botAccess');
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
+const { logMessageCommand } = require('../../utils/commandUsageLogger');
 const noPrefixCache = new Map();
 
 const event = {
@@ -119,6 +120,10 @@ const event = {
                 return message.reply({ components: [container.toJSON()], flags: MessageFlags.IsComponentsV2 });
             }
         }
+
+        logMessageCommand(client, message, command, args).catch((error) => {
+            client.logger.warn(`Failed to send command usage log: ${error.message}`);
+        });
 
         try {
             const response = await command.execute(client, message, args);

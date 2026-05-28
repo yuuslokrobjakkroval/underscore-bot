@@ -4,11 +4,11 @@
  */
 const emojis = {
   // ── Player Controls ──────────────────────────────────────────────────────
-  backward: "<:backward02strokerounded:1509086504536899694>",
+  backward: "<:previousstrokerounded:1509086512317337781>",
   play: "<:playstrokerounded:1509086493396963479>",
   pause: "<:pausestrokerounded:1509086496265605330>",
   stop: "<:stopstrokerounded:1509086501601021952>",
-  forward: "<:fastforwardstrokerounded:1509086507955126422>",
+  forward: "<:nextstrokerounded:1509086514741510195>",
   loop: "<:repeatstrokerounded:1509086526221324428>",
   shuffle: "<:shufflesquarestrokerounded:1509086516960301056>",
   volume: "<:volumehighstrokerounded:1509086519241998487>",
