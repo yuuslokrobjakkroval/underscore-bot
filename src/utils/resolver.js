@@ -2,6 +2,7 @@ const SpotifyWebApi = require("spotify-web-api-node");
 const spotifyConfig = require("../config/spotify");
 const metadata = require("./metadata");
 const logger = require("./logger");
+const formatError = require("./formatError");
 
 // Hardcoded fallbacks from source project (Viora/Avon)
 const FALLBACK_ID = "83c98500a89a4a5eae6fa819643644b8";
@@ -35,13 +36,7 @@ async function getAccessToken() {
       return false;
     }
 
-    const errMsg =
-      e.message ||
-      (e.body && e.body.error && e.body.error.message) ||
-      (e.body && e.body.error_description) ||
-      (e.body && e.body.error) ||
-      JSON.stringify(e);
-    logger.error(`Spotify Auth Error: ${errMsg}`);
+    logger.error(`Spotify Auth Error: ${formatError(e)}`);
 
     // Try fallback if not already using it
     if (!usingFallback && spotifyConfig.clientId !== FALLBACK_ID) {
@@ -114,14 +109,7 @@ async function washTrack(track) {
         `[Spotify] Rate Limit hit (429). Pausing Spotify calls for next ${Math.round(retryAfter / 60)} minutes.`,
       );
     } else {
-      const errMsg =
-        e.message ||
-        (e.body && e.body.error && e.body.error.message) ||
-        (e.body && e.body.error_description) ||
-        (e.body && e.body.error) ||
-        JSON.stringify(e);
-      console.log(errMsg);
-      logger.error(`Metadata Wash Error: ${errMsg}`);
+      logger.error(`Metadata Wash Error: ${formatError(e)}`);
     }
 
     // Fallback to regex cleaning

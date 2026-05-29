@@ -1,6 +1,7 @@
 const SpotifyWebApi = require('spotify-web-api-node');
 const config = require('../config/spotify');
 const logger = require('./logger');
+const formatError = require('./formatError');
 
 // Hardcoded fallbacks from source project (Viora/Avon)
 const FALLBACK_ID = '83c98500a89a4a5eae6fa819643644b8';
@@ -23,8 +24,7 @@ async function ensureToken() {
         tokenExpiry = Date.now() + (data.body['expires_in'] * 1000) - 60000;
         return true;
     } catch (error) {
-        const errMsg = error.message || (error.body && error.body.error_description) || JSON.stringify(error);
-        logger.error(`[SPOTIFY] Token Refresh Error: ${errMsg}`);
+        logger.error(`[SPOTIFY] Token Refresh Error: ${formatError(error)}`);
         
         // Try fallback
         if (!usingFallback && config.clientId !== FALLBACK_ID) {
@@ -63,8 +63,7 @@ async function getRecommendedVibe(title, author) {
             uri: t.external_urls.spotify
         }));
     } catch (error) {
-        const errMsg = error.message || (error.body && error.body.error) || JSON.stringify(error);
-        logger.error(`[SPOTIFY] Rec Error: ${errMsg}`);
+        logger.error(`[SPOTIFY] Rec Error: ${formatError(error)}`);
         return null;
     }
 }
