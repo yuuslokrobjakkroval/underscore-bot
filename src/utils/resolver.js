@@ -17,6 +17,19 @@ let tokenExpiry = 0;
 let usingFallback = false;
 let rateLimitedUntil = 0; // Epoch timestamp in ms when the rate limit expires
 
+function markWashed(track) {
+  try {
+    Object.defineProperty(track, "__metadataWashed", {
+      value: true,
+      configurable: true,
+    });
+  } catch {
+    track.__metadataWashed = true;
+  }
+
+  return track;
+}
+
 async function getAccessToken() {
   if (Date.now() < rateLimitedUntil) return false;
   if (Date.now() < tokenExpiry) return true;
@@ -58,19 +71,20 @@ async function getAccessToken() {
  */
 async function washTrack(track) {
   if (!track) return null;
+  if (track.__metadataWashed) return track;
 
   // If it's already a Spotify track, just clean the metadata regex-wise
   if (track.sourceName === "spotify") {
     track.title = metadata.cleanTitle(track.title);
     track.author = metadata.cleanAuthor(track.author);
-    return track;
+    return markWashed(track);
   }
 
   // Skip Spotify API completely if currently in a rate limit cooldown window
   if (Date.now() < rateLimitedUntil) {
     track.title = metadata.cleanTitle(track.title);
     track.author = metadata.cleanAuthor(track.author);
-    return track;
+    return markWashed(track);
   }
 
   try {
@@ -79,7 +93,7 @@ async function washTrack(track) {
       // Immediately clean using regex fallback if access was denied/rate limited
       track.title = metadata.cleanTitle(track.title);
       track.author = metadata.cleanAuthor(track.author);
-      return track;
+      return markWashed(track);
     }
 
     // Use a cleaned query for better search accuracy on Spotify
@@ -117,7 +131,7 @@ async function washTrack(track) {
     track.author = metadata.cleanAuthor(track.author);
   }
 
-  return track;
+  return markWashed(track);
 }
 
 module.exports = {
