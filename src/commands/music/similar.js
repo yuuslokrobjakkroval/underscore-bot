@@ -122,7 +122,7 @@ module.exports = {
                 const track = tracks[index];
                 if (track) {
                     // Instant Premium & Queue Limit Check (Zero Latency)
-                    const isPremium = client.db.isPremium(member.guild.id, user.id) || client.config.owners.includes(user.id);
+                    const isPremium = client.db.isPremium(member.guild.id, user.id, client.user.id) || client.config.owners.includes(user.id);
 
                     const QUEUE_LIMIT = 50;
                     if (player && !isPremium && player.queue.length >= QUEUE_LIMIT) {
@@ -147,7 +147,7 @@ module.exports = {
                 }
             } else if (i.customId === 'sim_all') {
                 // Instant Premium & Queue Limit Check (Zero Latency)
-                const isPremium = client.db.isPremium(member.guild.id, user.id) || client.config.owners.includes(user.id);
+                const isPremium = client.db.isPremium(member.guild.id, user.id, client.user.id) || client.config.owners.includes(user.id);
 
                 const QUEUE_LIMIT = 50;
                 if (!isPremium && (player.queue.length + tracks.length) > QUEUE_LIMIT) {

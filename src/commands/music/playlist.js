@@ -115,7 +115,7 @@ module.exports = {
     const guildId = isInteraction ? message.guildId : message.guild.id;
 
     const isPremium =
-      client.db.isPremium(guildId, user.id) ||
+      client.db.isPremium(guildId, user.id, client.user.id) ||
       client.config.owners.includes(user.id);
 
     const createError = (text) => ({

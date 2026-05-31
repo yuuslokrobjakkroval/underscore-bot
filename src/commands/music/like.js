@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const User = require('../../database/models/user');
 const emojis = require('../../utils/emojis');
+const { hasPremium } = require('../../utils/entitlements');
 
 module.exports = {
     name: 'like',
@@ -28,9 +29,7 @@ module.exports = {
             const guildData = await Guild.findOne({ guildId: message.guild.id });
             let userData = await User.findOne({ userId: user.id });
 
-            const isGuildPremium = guildData?.premium && (!guildData.premiumUntil || guildData.premiumUntil > Date.now());
-            const isUserPremium = userData?.premium && (!userData.premiumUntil || userData.premiumUntil > Date.now());
-            const isPremium = isGuildPremium || isUserPremium || client.config.owners.includes(user.id);
+            const isPremium = await hasPremium(client, message.guild.id, user.id, { guildData, userData }) || client.config.owners.includes(user.id);
 
             const LIKED_LIMIT = 20;
 

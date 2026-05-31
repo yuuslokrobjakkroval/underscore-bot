@@ -128,7 +128,7 @@ module.exports = {
                     let player = client.manager.players.get(member.guild.id);
 
                     // Instant Premium & Queue Limit Check (Zero Latency)
-                    const isPremium = client.db.isPremium(member.guild.id, user.id) || client.config.owners.includes(user.id);
+                    const isPremium = client.db.isPremium(member.guild.id, user.id, client.user.id) || client.config.owners.includes(user.id);
 
                     const QUEUE_LIMIT = 50;
                     if (player && !isPremium && player.queue.length >= QUEUE_LIMIT) {
@@ -166,7 +166,7 @@ module.exports = {
                 let player = client.manager.players.get(member.guild.id);
 
                 // Instant Premium & Queue Limit Check (Zero Latency)
-                const isPremium = client.db.isPremium(member.guild.id, user.id) || client.config.owners.includes(user.id);
+                const isPremium = client.db.isPremium(member.guild.id, user.id, client.user.id) || client.config.owners.includes(user.id);
 
                 const QUEUE_LIMIT = 50;
                 if (!isPremium && ((player?.queue?.length || 0) + tracks.length) > QUEUE_LIMIT) {

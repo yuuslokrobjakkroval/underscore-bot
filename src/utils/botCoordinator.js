@@ -1,18 +1,23 @@
 const BotAssignment = require('../database/models/botAssignment');
+const BotSettings = require('../database/models/botSettings');
 
 const CLAIM_TTL_MS = 45_000;
 
-function getFamilyBotIds(client) {
+async function getFamilyBotIds(client) {
     const configured = (process.env.MUSIC_BOT_IDS || '')
         .split(',')
         .map(id => id.trim())
         .filter(Boolean);
 
-    return [...new Set([...configured, client.user.id])];
+    const settingsBotIds = await BotSettings.distinct('botId', {
+        botId: { $type: 'string', $nin: ['', 'global'] },
+    }).catch(() => []);
+
+    return [...new Set([...configured, ...settingsBotIds, client.user.id])];
 }
 
-function getPrimaryBotId(client) {
-    return getFamilyBotIds(client)[0];
+async function getPrimaryBotId(client) {
+    return (await getFamilyBotIds(client))[0];
 }
 
 function isInteraction(message) {
@@ -73,7 +78,7 @@ async function resolveMusicBot(client, message) {
         };
     }
 
-    const familyBotIds = getFamilyBotIds(client);
+    const familyBotIds = await getFamilyBotIds(client);
     const existingBot = findFamilyBotInVoice(voiceChannel, familyBotIds);
 
     if (existingBot) {
@@ -105,14 +110,14 @@ async function resolveCommandBot(client, message, options = {}) {
         return { allowed: true };
     }
 
-    const familyBotIds = getFamilyBotIds(client);
+    const familyBotIds = await getFamilyBotIds(client);
     if (familyBotIds.length <= 1) {
         return { allowed: true };
     }
 
     const voiceChannel = message.member?.voice?.channel;
     if (!voiceChannel) {
-        const primaryBotId = getPrimaryBotId(client);
+        const primaryBotId = await getPrimaryBotId(client);
 
         return {
             allowed: client.user.id === primaryBotId,

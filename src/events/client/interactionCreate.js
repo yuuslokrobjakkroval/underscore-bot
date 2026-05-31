@@ -6,6 +6,7 @@ const {
 } = require("discord.js");
 const emojis = require("../../utils/emojis");
 const { isOwner, isPrivate } = require("../../utils/botAccess");
+const { hasPremium } = require("../../utils/entitlements");
 const { logSlashCommand } = require("../../utils/commandUsageLogger");
 
 const createErrorMsg = (text) => ({
@@ -53,15 +54,13 @@ module.exports = {
         const userData = await User.findOne({ userId: interaction.user.id });
         const userIsOwner = isOwner(client, interaction.user.id);
 
-        const isGuildPremium =
-          guildData?.premium &&
-          (!guildData.premiumUntil || guildData.premiumUntil > Date.now());
-        const isUserPremium =
-          (userData?.premium &&
-            (!userData.premiumUntil || userData.premiumUntil > Date.now())) ||
-          userIsOwner;
+        const isPremiumUserOrGuild =
+          (await hasPremium(client, interaction.guildId, interaction.user.id, {
+            guildData,
+            userData,
+          })) || userIsOwner;
 
-        if (!isGuildPremium && !isUserPremium) {
+        if (!isPremiumUserOrGuild) {
           return interaction.reply({
             components: [
               new ContainerBuilder()

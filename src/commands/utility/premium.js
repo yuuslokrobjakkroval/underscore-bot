@@ -6,9 +6,24 @@ const {
   SectionBuilder,
   ThumbnailBuilder,
 } = require("discord.js");
-const User = require("../../database/models/user");
 const Guild = require("../../database/models/guild");
+const User = require("../../database/models/user");
 const emojis = require("../../utils/emojis");
+const {
+  findGrant,
+  getBotId,
+  hasGuildPremium,
+  hasUserPremium,
+  isActiveGrant,
+  setGuildPremium,
+  setUserGrant,
+} = require("../../utils/entitlements");
+
+const cleanId = (value) => value?.replace(/[<@!>]/g, "");
+const expiryFromDays = (days) =>
+  days > 0 ? new Date(Date.now() + days * 24 * 60 * 60 * 1000) : null;
+const formatExpiry = (date) =>
+  date ? `<t:${Math.floor(new Date(date).getTime() / 1000)}:R>` : "Never";
 
 module.exports = {
   name: "premium",
@@ -22,7 +37,7 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("activate")
-        .setDescription("Activate premium for a guild (Owner only)")
+        .setDescription("Activate premium for a guild on this bot")
         .addStringOption((opt) =>
           opt
             .setName("guildid")
@@ -39,7 +54,7 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("add")
-        .setDescription("Add premium to a user (Owner only)")
+        .setDescription("Add premium to a user on this bot")
         .addUserOption((opt) =>
           opt
             .setName("user")
@@ -56,7 +71,7 @@ module.exports = {
     .addSubcommand((sub) =>
       sub
         .setName("revoke")
-        .setDescription("Revoke premium from a user or guild (Owner only)")
+        .setDescription("Revoke premium from a user or guild on this bot")
         .addStringOption((opt) =>
           opt
             .setName("type")
@@ -74,13 +89,14 @@ module.exports = {
             .setRequired(true),
         ),
     ),
-  async execute(client, message, args) {
+
+  async execute(client, message, args = []) {
     const isInteraction = !!message.options;
     const sub = isInteraction
       ? message.options.getSubcommand()
-      : args[0] || "status";
+      : (args[0] || "status").toLowerCase();
     const user = isInteraction ? message.user : message.author;
-    const owners = client.config.owners;
+    const botId = getBotId(client);
 
     const createMsg = (title, content, isError = false) => {
       const container = new ContainerBuilder().addSectionComponents(
@@ -89,7 +105,7 @@ module.exports = {
             new TextDisplayBuilder().setContent(
               isError ? `### ${emojis.error} ${title}` : `### ${title}`,
             ),
-            new TextDisplayBuilder().setContent(`ㅤ\n${content}`),
+            new TextDisplayBuilder().setContent(`\n${content}`),
           )
           .setThumbnailAccessory(
             new ThumbnailBuilder().setURL(client.user.displayAvatarURL()),
@@ -104,33 +120,24 @@ module.exports = {
     if (sub === "status") {
       const userData = await User.findOne({ userId: user.id });
       const guildData = await Guild.findOne({ guildId: message.guild.id });
-      const isOwner = client.config.owners.includes(user.id);
+      const userGrant = findGrant(userData?.botPremiums, botId);
+      const guildGrant = findGrant(guildData?.botPremiums, botId);
+      const userPrem = await hasUserPremium(client, user.id, userData);
+      const guildPrem = await hasGuildPremium(client, message.guild.id, guildData);
+      const owner = client.config.owners.includes(user.id);
 
-      const userPrem =
-        (userData?.premium &&
-          (!userData.premiumUntil || userData.premiumUntil > Date.now())) ||
-        isOwner;
-      const guildPrem =
-        guildData?.premium &&
-        (!guildData.premiumUntil || guildData.premiumUntil > Date.now());
-
-      let statusText = `**${emojis.feather} Feather Premium Status**\n\n`;
-      statusText += `**User Premium:** ${userPrem ? "Enabled ✨" : "Disabled"}\n`;
-      if (isOwner) statusText += `\`Lifetime Owner Perk\`\n`;
-      else if (userData?.premiumUntil)
-        statusText += `Expires <t:${Math.floor(userData.premiumUntil.getTime() / 1000)}:R>\n`;
-
-      statusText += `\n› **Guild Premium:** ${guildPrem ? "Enabled ✨" : "Disabled"}\n`;
-      if (guildData?.premiumUntil)
-        statusText += `Expires <t:${Math.floor(guildData.premiumUntil.getTime() / 1000)}:R>\n`;
-
-      statusText += `\n*Pro filters, 24/7 mode, and No-Prefix active.*`;
+      let statusText = `**Bot:** <@${botId}>\n`;
+      statusText += `**User Premium:** ${userPrem ? "Enabled" : "Disabled"}\n`;
+      if (owner) statusText += "`Lifetime Owner Perk`\n";
+      else if (userGrant?.until) statusText += `Expires ${formatExpiry(userGrant.until)}\n`;
+      statusText += `\n**Guild Premium:** ${guildPrem ? "Enabled" : "Disabled"}\n`;
+      if (guildGrant?.until) statusText += `Expires ${formatExpiry(guildGrant.until)}\n`;
+      statusText += "\nPremium grants are scoped to this bot only.";
 
       return createMsg("Premium Status", statusText);
     }
 
-    // Owner only commands
-    if (!owners.includes(user.id)) {
+    if (!client.config.owners.includes(user.id)) {
       return createMsg(
         "Access Denied",
         "This subcommand is restricted to Bot Owners.",
@@ -140,104 +147,33 @@ module.exports = {
 
     if (sub === "revoke") {
       const type = isInteraction ? message.options.getString("type") : args[1];
-      const rawId = isInteraction ? message.options.getString("id") : args[2];
-      const targetId = rawId?.replace(/[<@!>]/g, "");
+      const targetId = cleanId(isInteraction ? message.options.getString("id") : args[2]);
 
-      if (!type || !["user", "guild"].includes(type))
+      if (!["user", "guild"].includes(type) || !targetId) {
         return createMsg(
           "Invalid Usage",
-          "Please specify type: `user` or `guild`.",
+          "Use `premium revoke <user|guild> <id>`.",
           true,
-        );
-      if (!targetId)
-        return createMsg(
-          "Invalid Usage",
-          "Please provide a User/Guild ID.",
-          true,
-        );
-
-      if (type === "user") {
-        await User.findOneAndUpdate(
-          { userId: targetId },
-          { premium: false, premiumUntil: null },
-        );
-
-        // DM Notification
-        try {
-          const targetUser = await client.users.fetch(targetId);
-          const dmContainer = new ContainerBuilder().addTextDisplayComponents(
-            new TextDisplayBuilder().setContent(
-              `### ${emojis.error} Premium Revoked\n` +
-                `Your **Feather Premium** subscription has been revoked by an administrator.\n\n` +
-                `**Impact:**\n` +
-                `No-Prefix access removed.\n` +
-                `Premium filters disabled.\n` +
-                `Regular usage limits reapplied.\n\n` +
-                `*If you believe this is a mistake, please contact support.*`,
-            ),
-          );
-          await targetUser
-            .send({
-              components: [dmContainer.toJSON()],
-              flags: MessageFlags.IsComponentsV2,
-            })
-            .catch(() => {});
-          client.logger.info(`[Premium] Sent Revoke DM to user ${targetId}`);
-        } catch (err) {
-          client.logger.error(
-            `[Premium] Failed to send Revoke DM to ${targetId}: ${err.message}`,
-          );
-        }
-
-        // Clear cache
-        const { noPrefixCache } = require("../../events/client/messageCreate");
-        if (noPrefixCache) noPrefixCache.delete(targetId);
-
-        return createMsg(
-          "Premium Revoked",
-          `Revoked Premium from User \`${targetId}\`.`,
-        );
-      } else {
-        await Guild.findOneAndUpdate(
-          { guildId: targetId },
-          { premium: false, premiumUntil: null },
-        );
-
-        // DM Notification for Owner
-        try {
-          const targetGuild =
-            client.guilds.cache.get(targetId) ||
-            (await client.guilds.fetch(targetId).catch(() => null));
-          if (targetGuild) {
-            const owner = await targetGuild.fetchOwner();
-            const dmContainer = new ContainerBuilder().addTextDisplayComponents(
-              new TextDisplayBuilder().setContent(
-                `### ${emojis.error} Guild Premium Revoked\n` +
-                  `Premium status has been revoked from your server **${targetGuild.name}**.\n\n` +
-                  `**Impact:**\n` +
-                  `24/7 mode disabled.\n` +
-                  `Queue limits reapplied.\n` +
-                  `Special filters removed.\n\n` +
-                  `*If you believe this is a mistake, please contact support.*`,
-              ),
-            );
-            await owner
-              .send({
-                components: [dmContainer.toJSON()],
-                flags: MessageFlags.IsComponentsV2,
-              })
-              .catch(() => {});
-            client.logger.info(
-              `[Premium] Sent Revoke DM to owner of guild ${targetId}`,
-            );
-          }
-        } catch (err) {}
-
-        return createMsg(
-          "Premium Revoked",
-          `Revoked Premium from Guild \`${targetId}\`.`,
         );
       }
+
+      if (type === "user") {
+        await setUserGrant(targetId, "botPremiums", botId, false, null);
+        await client.db.refresh(null, targetId);
+        const { noPrefixCache } = require("../../events/client/messageCreate");
+        if (noPrefixCache) noPrefixCache.delete(`${targetId}:${botId}`);
+        return createMsg(
+          "Premium Revoked",
+          `Revoked premium from user \`${targetId}\` for <@${botId}>.`,
+        );
+      }
+
+      await setGuildPremium(targetId, botId, false, null, user.id);
+      await client.db.refresh(targetId, null);
+      return createMsg(
+        "Premium Revoked",
+        `Revoked premium from guild \`${targetId}\` for <@${botId}>.`,
+      );
     }
 
     if (sub === "activate") {
@@ -246,112 +182,31 @@ module.exports = {
         : args[1];
       const days = isInteraction
         ? message.options.getInteger("days") || 0
-        : parseInt(args[2] || 0);
+        : parseInt(args[2] || 0, 10);
 
-      if (!targetGuildId)
+      if (!targetGuildId) {
         return createMsg("Invalid Usage", "Please provide a Guild ID.", true);
-
-      const targetGuild = client.guilds.cache.get(targetGuildId);
-      const guildName = targetGuild
-        ? targetGuild.name
-        : `Guild \`${targetGuildId}\``;
+      }
 
       const existingGuild = await Guild.findOne({ guildId: targetGuildId });
-      const isGuildActive =
-        existingGuild?.premium &&
-        (!existingGuild.premiumUntil ||
-          existingGuild.premiumUntil > Date.now());
+      const existingGrant = findGrant(existingGuild?.botPremiums, botId);
 
-      if (isGuildActive && days > 0) {
-        const expiry = existingGuild.premiumUntil
-          ? `<t:${Math.floor(existingGuild.premiumUntil.getTime() / 1000)}:R>`
-          : "Lifetime";
+      if (isActiveGrant(existingGrant)) {
         return createMsg(
           "Already Active",
-          `Server **${guildName}** already has **Feather Premium**! (Expires: ${expiry})`,
+          `Guild \`${targetGuildId}\` already has premium on <@${botId}>. Expires: ${formatExpiry(existingGrant.until)}`,
           true,
         );
       }
 
-      if (existingGuild?.premium && !existingGuild.premiumUntil && days === 0) {
-        return createMsg(
-          `Server **${guildName}** already has **Lifetime** Premium.`,
-          true,
-        );
-      }
+      const expiryDate = expiryFromDays(days);
+      await setGuildPremium(targetGuildId, botId, true, expiryDate, user.id);
+      await client.db.refresh(targetGuildId, null);
 
-      const expiryDate =
-        days > 0 ? new Date(Date.now() + days * 24 * 60 * 60 * 1000) : null;
-      await Guild.findOneAndUpdate(
-        { guildId: targetGuildId },
-        { premium: true, premiumUntil: expiryDate },
-        { upsert: true },
+      return createMsg(
+        "Guild Premium Activated",
+        `**Guild:** \`${targetGuildId}\`\n**Bot:** <@${botId}>\n**Duration:** ${days > 0 ? `${days} days` : "Lifetime"}\n**Expires:** ${formatExpiry(expiryDate)}`,
       );
-
-      const durationText = days > 0 ? `**${days} days**` : "**Lifetime**";
-      const expiryText =
-        days > 0 ? `<t:${Math.floor(expiryDate.getTime() / 1000)}:R>` : "Never";
-
-      // Notification logic
-      if (targetGuild) {
-        const dmContent =
-          `### ${emojis.feather} Feather Guild Premium Activated!\n` +
-          `Your server **${targetGuild.name}** have been given **Feather Premium** for ${durationText}.\n\n` +
-          `${emojis.blackdot} **Exclusive Server Perks:**\n` +
-          `**24/7 Mode**\n` +
-          `Keep the bot in voice channels indefinitely.\n\n` +
-          `**Unlimited Queue**\n` +
-          `No restrictions on queue size for all members.\n\n` +
-          `**Enhanced Filters**\n` +
-          `Access 8D, Nightcore, and Vaporwave filters.\n` +
-          `**Smart Autoplay** Intelligent song recommendations.\n\n` +
-          `*${days > 0 ? `Expires: <t:${Math.floor(expiryDate.getTime() / 1000)}:R>` : "Duration: Lifetime Access"}*`;
-
-        const dmContainer = new ContainerBuilder().addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(dmContent),
-        );
-
-        // Send to Owner
-        try {
-          const owner = await targetGuild.fetchOwner();
-          await owner
-            .send({
-              components: [dmContainer.toJSON()],
-              flags: MessageFlags.IsComponentsV2,
-            })
-            .catch(() => {});
-        } catch (err) {}
-
-        // Send to Admins (first 5)
-        try {
-          const admins = targetGuild.members.cache.filter(
-            (m) =>
-              m.permissions.has("Administrator") &&
-              !m.user.bot &&
-              m.id !== targetGuild.ownerId,
-          );
-          let sentCount = 0;
-          for (const [id, admin] of admins) {
-            if (sentCount >= 5) break;
-            await admin
-              .send({
-                components: [dmContainer.toJSON()],
-                flags: MessageFlags.IsComponentsV2,
-              })
-              .catch(() => {});
-            sentCount++;
-          }
-        } catch (err) {}
-      }
-
-      const content =
-        `${emojis.feather} **Feather Premium Activated**\n` +
-        `${emojis.blackdot} **Status:** Activated ✨\n` +
-        `**Server:** ${guildName}\n` +
-        `**Duration:** ${durationText}\n` +
-        `**Expires:** ${expiryText}`;
-
-      return createMsg("Guild Premium Activated", content);
     }
 
     if (sub === "add") {
@@ -360,94 +215,40 @@ module.exports = {
         : message.mentions.users.first();
       const days = isInteraction
         ? message.options.getInteger("days") || 0
-        : parseInt(args[2] || 0);
+        : parseInt(args[2] || 0, 10);
 
-      if (!targetUser)
+      if (!targetUser) {
         return createMsg("Invalid Usage", "Please mention a user.", true);
+      }
 
       const existingUser = await User.findOne({ userId: targetUser.id });
-      const isUserActive =
-        existingUser?.premium &&
-        (!existingUser.premiumUntil || existingUser.premiumUntil > Date.now());
+      const existingGrant = findGrant(existingUser?.botPremiums, botId);
 
-      if (isUserActive && days > 0) {
-        const expiry = existingUser.premiumUntil
-          ? `<t:${Math.floor(existingUser.premiumUntil.getTime() / 1000)}:R>`
-          : "Lifetime";
+      if (isActiveGrant(existingGrant)) {
         return createMsg(
           "Already Active",
-          `**${targetUser.username}** already has **Feather Premium**! (Expires: ${expiry})`,
+          `**${targetUser.username}** already has premium on <@${botId}>. Expires: ${formatExpiry(existingGrant.until)}`,
           true,
         );
       }
 
-      if (existingUser?.premium && !existingUser.premiumUntil && days === 0) {
-        return createMsg(
-          "Already Active",
-          `**${targetUser.username}** already has **Lifetime** Premium.`,
-          true,
-        );
-      }
+      const expiryDate = expiryFromDays(days);
+      await setUserGrant(targetUser.id, "botPremiums", botId, true, expiryDate);
+      await client.db.refresh(null, targetUser.id);
 
-      const expiryDate =
-        days > 0 ? new Date(Date.now() + days * 24 * 60 * 60 * 1000) : null;
-      await User.findOneAndUpdate(
-        { userId: targetUser.id },
-        { premium: true, premiumUntil: expiryDate },
-        { upsert: true },
-      );
-
-      // Clear cache
       const { noPrefixCache } = require("../../events/client/messageCreate");
-      if (noPrefixCache) noPrefixCache.delete(targetUser.id);
+      if (noPrefixCache) noPrefixCache.delete(`${targetUser.id}:${botId}`);
 
-      const durationText = days > 0 ? `**${days} days**` : "**Lifetime**";
-      const expiryText =
-        days > 0 ? `<t:${Math.floor(expiryDate.getTime() / 1000)}:R>` : "Never";
-
-      // DM Notification
-      try {
-        const dmContainer = new ContainerBuilder().addTextDisplayComponents(
-          new TextDisplayBuilder().setContent(
-            `### ${emojis.feather} Feather Premium Activated!\n` +
-              `**You have been given Feather Premium** for ${durationText}. Enjoy your exclusive benefits:\n\n` +
-              `${emojis.blackdot} **Exclusive Benefits:**\n` +
-              `**No-Prefix**\n` +
-              `Execute commands directly without the prefix.\n\n` +
-              `**24/7 Mode**\n` +
-              `Maintain bot connection in voice channels indefinitely.\n\n` +
-              `**Pro Audio Filters**\n` +
-              `Enhanced audio processing (8D, Nightcore, Vaporwave).\n\n` +
-              `**Unlimited Access**\n` +
-              `No restrictions on queue size or liked songs.\n\n` +
-              `**Smart Autoplay**\n` +
-              `Receive intelligent song recommendations.\n\n` +
-              `*Thank you for supporting Feather! Type \`/premium status\` to view your details.*`,
-          ),
-        );
-        await targetUser
-          .send({
-            components: [dmContainer.toJSON()],
-            flags: MessageFlags.IsComponentsV2,
-          })
-          .catch(() => {});
-        client.logger.info(
-          `[Premium] Sent Activation DM to user ${targetUser.id}`,
-        );
-      } catch (err) {
-        client.logger.error(
-          `Failed to DM user ${targetUser.id}: ${err.message}`,
-        );
-      }
-
-      const content =
-        `**${emojis.feather} Feather Premium Activated**\n` +
-        `${emojis.blackdot} ** Status:** Activated ✨\n` +
-        `** User:** ${targetUser.username} \n` +
-        `** Duration:** ${durationText} \n` +
-        `** Expires:** ${expiryText} `;
-
-      return createMsg("User Premium Activated", content);
+      return createMsg(
+        "User Premium Activated",
+        `**User:** ${targetUser.username}\n**Bot:** <@${botId}>\n**Duration:** ${days > 0 ? `${days} days` : "Lifetime"}\n**Expires:** ${formatExpiry(expiryDate)}`,
+      );
     }
+
+    return createMsg(
+      "Invalid Usage",
+      "Use `premium status`, `premium add`, `premium activate`, or `premium revoke`.",
+      true,
+    );
   },
 };
