@@ -12,6 +12,7 @@ const {
   setMode,
   syncClientAccess,
 } = require("../../utils/botAccess");
+const { getBotId } = require("../../utils/entitlements");
 
 const createMsg = (text, isError = false) => ({
   components: [
@@ -103,6 +104,7 @@ module.exports = {
 
       return createMsg(
         `**Bot Access Status**\n` +
+          `**Bot:** <@${getBotId(client)}>\n` +
           `**Mode:** \`${mode}\`\n` +
           `**Owners:**\n${owners}`,
       );
@@ -123,8 +125,8 @@ module.exports = {
       await setMode(client, mode);
       return createMsg(
         mode === "private"
-          ? "**Private mode enabled.** Only bot owners can use commands now."
-          : "**Public mode enabled.** Everyone can use commands now.",
+          ? `**Private mode enabled** for <@${getBotId(client)}>. Only this bot's owners can use commands now.`
+          : `**Public mode enabled** for <@${getBotId(client)}>. Everyone can use this bot now.`,
       );
     }
 

@@ -1,4 +1,5 @@
 const logger = require("../../utils/logger");
+const { syncClientAccess } = require("../../utils/botAccess");
 
 const updateActivity = (client) => {
   const activePlayers = Array.from(client.manager.players.values()).filter(
@@ -30,6 +31,7 @@ module.exports = {
   once: true,
   async execute(client) {
     await client.db.connect();
+    await syncClientAccess(client);
     logger.info(`Logged in as ${client.user.tag}!`);
     client.user.setStatus("online");
 

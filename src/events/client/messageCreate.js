@@ -3,6 +3,7 @@ const helpUI = require('../../ui/helpUI');
 const emojis = require('../../utils/emojis');
 const { resolveCommandBot } = require('../../utils/botCoordinator');
 const { isOwner, isPrivate } = require('../../utils/botAccess');
+const { getBotId, hasNoPrefix, hasPremium } = require('../../utils/entitlements');
 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
 const { logMessageCommand } = require('../../utils/commandUsageLogger');
 const noPrefixCache = new Map();
@@ -46,31 +47,18 @@ const event = {
             commandName = args.shift().toLowerCase();
         } else {
             // Check No-Prefix
-            let hasNoPrefix = noPrefixCache.get(message.author.id);
+            const noPrefixCacheKey = `${message.author.id}:${getBotId(client)}`;
+            let hasNoPrefixValue = noPrefixCache.get(noPrefixCacheKey);
 
-            if (hasNoPrefix === undefined) {
+            if (hasNoPrefixValue === undefined) {
                 const userData = await User.findOne({ userId: message.author.id });
-                const authorIsOwner = isOwner(client, message.author.id);
-                const isPremiumUser = userData?.premium && (!userData.premiumUntil || userData.premiumUntil > Date.now());
+                hasNoPrefixValue = await hasNoPrefix(client, message.author.id, userData);
 
-                if (authorIsOwner) {
-                    hasNoPrefix = userData?.noPrefix || false;
-                } else {
-                    hasNoPrefix = isPremiumUser || userData?.noPrefix || false;
-                }
-
-                if (userData?.noPrefix && userData.noPrefixUntil && userData.noPrefixUntil < Date.now()) {
-                    userData.noPrefix = false;
-                    userData.noPrefixUntil = null;
-                    await userData.save();
-                    if (!isPremiumUser && !authorIsOwner) hasNoPrefix = false;
-                }
-
-                noPrefixCache.set(message.author.id, hasNoPrefix);
-                setTimeout(() => noPrefixCache.delete(message.author.id), 300000);
+                noPrefixCache.set(noPrefixCacheKey, hasNoPrefixValue);
+                setTimeout(() => noPrefixCache.delete(noPrefixCacheKey), 300000);
             }
 
-            if (hasNoPrefix) {
+            if (hasNoPrefixValue) {
                 args = message.content.trim().split(/ +/);
                 commandName = args.shift().toLowerCase();
                 const exists = client.commands.has(commandName) ||
@@ -109,10 +97,9 @@ const event = {
             const userData = await User.findOne({ userId: message.author.id });
 
             const authorIsOwner = isOwner(client, message.author.id);
-            const isGuildPremium = guildData?.premium && (!guildData.premiumUntil || guildData.premiumUntil > Date.now());
-            const isUserPremium = (userData?.premium && (!userData.premiumUntil || userData.premiumUntil > Date.now())) || authorIsOwner;
+            const isPremiumUserOrGuild = await hasPremium(client, message.guild.id, message.author.id, { guildData, userData }) || authorIsOwner;
 
-            if (!isGuildPremium && !isUserPremium) {
+            if (!isPremiumUserOrGuild) {
                 const { ContainerBuilder, TextDisplayBuilder, MessageFlags } = require('discord.js');
                 const container = new ContainerBuilder().addTextDisplayComponents(
                     new TextDisplayBuilder().setContent(`### ✨ Premium Feature\n> This command is restricted to **Premium Users** or **Premium Guilds**.\n> \`/premium status\` to check your status.`)

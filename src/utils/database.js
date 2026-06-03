@@ -40,12 +40,13 @@ class DatabaseManager {
         return this.userCache.get(userId) || { userId };
     }
 
-    isPremium(guildId, userId) {
+    isPremium(guildId, userId, botId = 'global') {
         const guild = this.getGuild(guildId);
         const user = this.getUser(userId);
-        
-        const guildPremium = guild.premium && (!guild.premiumUntil || guild.premiumUntil > Date.now());
-        const userPremium = user.premium && (!user.premiumUntil || user.premiumUntil > Date.now());
+
+        const isActive = (grant) => !!(grant?.enabled && (!grant.until || new Date(grant.until).getTime() > Date.now()));
+        const guildPremium = isActive((guild.botPremiums || []).find(grant => String(grant.botId) === String(botId)));
+        const userPremium = isActive((user.botPremiums || []).find(grant => String(grant.botId) === String(botId)));
         
         return !!(guildPremium || userPremium);
     }

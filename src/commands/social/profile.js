@@ -14,6 +14,7 @@ const User = require("../../database/models/user");
 const Playlist = require("../../database/models/playlist");
 const logger = require("../../utils/logger");
 const emojis = require("../../utils/emojis");
+const { findGrant } = require("../../utils/entitlements");
 
 // Paste your custom medium-resolution profile banner URL here!
 const PROFILE_BANNER_URL =
@@ -56,14 +57,15 @@ module.exports = {
 
       // 3. Determine Tier Status
       const isOwner = client.config.owners.includes(targetUser.id);
-      const isPremium = client.db.isPremium(null, targetUser.id) || isOwner;
+      const isPremium = client.db.isPremium(null, targetUser.id, client.user.id) || isOwner;
+      const premiumGrant = findGrant(userData.botPremiums, client.user.id);
       let tierText = `${emojis.admin} **Standard Listener**`;
 
       if (isOwner) {
         tierText = `${emojis.statsDev} **POOKIE BIGBOSS**`;
       } else if (isPremium) {
-        if (userData.premiumUntil) {
-          const dateStr = new Date(userData.premiumUntil).toLocaleDateString(
+        if (premiumGrant?.until) {
+          const dateStr = new Date(premiumGrant.until).toLocaleDateString(
             "en-US",
             {
               year: "numeric",

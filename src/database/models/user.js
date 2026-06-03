@@ -20,6 +20,16 @@ const UserSchema = new mongoose.Schema({
     noPrefixUntil: { type: Date, default: null },
     premium: { type: Boolean, default: false },
     premiumUntil: { type: Date, default: null },
+    botNoPrefixes: [{
+        botId: { type: String, required: true },
+        enabled: { type: Boolean, default: true },
+        until: { type: Date, default: null }
+    }],
+    botPremiums: [{
+        botId: { type: String, required: true },
+        enabled: { type: Boolean, default: true },
+        until: { type: Date, default: null }
+    }],
     topArtists: { type: Map, of: Number, default: {} }, // Artist Name -> Play Count
     topSongs: [{ title: String, uri: String, count: { type: Number, default: 0 } }],
     spotify: {

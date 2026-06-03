@@ -37,6 +37,14 @@ const GuildSchema = new mongoose.Schema(
     premium: { type: Boolean, default: false },
     premiumUntil: { type: Date, default: null },
     premiumBy: { type: String, default: null }, // User ID who granted premium
+    botPremiums: [
+      {
+        botId: { type: String, required: true },
+        enabled: { type: Boolean, default: true },
+        until: { type: Date, default: null },
+        by: { type: String, default: null },
+      },
+    ],
 
     // ── Statistics ────────────────────────────────────────────────────────
     totalSongsPlayed: { type: Number, default: 0 },
