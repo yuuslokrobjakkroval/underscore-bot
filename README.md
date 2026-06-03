@@ -143,6 +143,7 @@ If `GUILD_ID` is set, commands are deployed to that guild. If it is not set, com
 
 ### Developer
 
+- `botprofile` - Change the bot avatar, banner, or username
 - `eval`
 - `reload`
 - `reboot`

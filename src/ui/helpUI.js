@@ -251,8 +251,8 @@ module.exports = {
                 `**Billing & Status**\n` +
                 `\`premium status\` (Check your current premium tier)\n\n` +
                 `**👑 Owner/Developer Commands**\n` +
-                `\`premium grant/revoke\`, \`noprefix\`, \`eval\`, \`reload\`, \`reboot\`\n` +
-                `*Usage:* \`${p}premium grant @User 30d\``,
+                `\`premium grant/revoke\`, \`noprefix\`, \`botprofile\`, \`eval\`, \`reload\`, \`reboot\`\n` +
+                `*Usage:* \`${p}botprofile avatar <image_url>\``,
             ),
           )
           .setThumbnailAccessory(
