@@ -29,7 +29,8 @@ const event = {
     if (
       isPrivate(client) &&
       !isOwner(client, message.author.id) &&
-      (mentionMatch || message.content.startsWith(prefix))
+      (mentionMatch ||
+        message.content.toLowerCase().startsWith(prefix.toLowerCase()))
     ) {
       const container = new ContainerBuilder().addTextDisplayComponents(
         new TextDisplayBuilder().setContent(
@@ -61,7 +62,7 @@ const event = {
       isDirectMention = true;
       args = message.content.slice(mentionMatch[0].length).trim().split(/ +/);
       commandName = args.shift().toLowerCase();
-    } else if (message.content.startsWith(prefix)) {
+    } else if (message.content.toLowerCase().startsWith(prefix.toLowerCase())) {
       args = message.content.slice(prefix.length).trim().split(/ +/);
       commandName = args.shift().toLowerCase();
     } else {
