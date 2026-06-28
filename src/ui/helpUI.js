@@ -69,7 +69,7 @@ module.exports = {
         new SectionBuilder()
           .addTextDisplayComponents(
             new TextDisplayBuilder().setContent(
-              `## ${emojis.feather} Help Menu`,
+              `## Help Menu`,
             ),
             new TextDisplayBuilder().setContent(
               `ㅤ\n` +
