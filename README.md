@@ -1,4 +1,4 @@
-# Pookie Bot
+# UNDERSCORE _
 
 A Discord music bot built with Discord.js v14, Kazagumo, Shoukaku, Lavalink, MongoDB, and Spotify support.
 
